@@ -8,16 +8,18 @@ public class TestBoard {
 		
 	}
 	
-	void calcTargets(TestBoardCell startCell, int pathlength) {
+	public void calcTargets(TestBoardCell startCell, int pathlength) {
 		
 	}
 	
-	Set<TestBoardCell> getTargets() {
-		return null;
+	public Set<TestBoardCell> getTargets() {
+		Set<TestBoardCell> temp = new HashSet<TestBoardCell>();
+		return temp;
 	}
 	
-	TestBoardCell getCell(int row, int col) {
-		return null;
+	public TestBoardCell getCell(int row, int col) {
+		TestBoardCell temp = new TestBoardCell(row, col);
+		return temp;
 	}
 	
 }

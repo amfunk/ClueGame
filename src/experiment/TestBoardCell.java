@@ -8,23 +8,24 @@ public class TestBoardCell {
 		
 	}
 	
-	Set<TestBoardCell> getAdjList() {
-		return null;
+	public Set<TestBoardCell> getAdjList() {
+		Set<TestBoardCell> temp = new HashSet<TestBoardCell>();
+		return temp;
 	}
 	
-	void setRoom(boolean isOccupied) {
+	public void setRoom(boolean isOccupied) {
 		
 	}
 	
-	boolean isRoom() {
+	public boolean isRoom() {
 		return false;
 	}
 	
-	void setOccupied(boolean isOccupied) {
+	public void setOccupied(boolean isOccupied) {
 		
 	}
 	
-	boolean getOccupied() {
+	public boolean getOccupied() {
 		return false;
 	}
 	
