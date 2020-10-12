@@ -1,0 +1,12 @@
+// Room spaces
+Room, Locker Room, L
+Room, Bathroom, B
+Room, Gym, G
+Room, Dining Hall, D
+Room, Control Center, C
+Room, Trash Room, T
+Room, Armory, A
+Room, Wine Cellar, W
+// Extra spaces
+Space, Unused, X
+Space, Hallway, H
