@@ -1,7 +1,5 @@
 package tests;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.Set;
 
 import org.junit.Assert;
@@ -92,16 +90,13 @@ class BoardTestsExp {
 	@Test
 	public void testTargetsOccupied() {
 		TestBoardCell cell = board.getCell(0, 0);
-		board.getCell(1, 0).setIsOccupied(true);
+		board.getCell(1, 1).setIsOccupied(true);
 		board.calcTargets(cell, 4);
 		Set<TestBoardCell> targets = board.getTargets();
-		Assert.assertEquals(6, targets.size());
-		Assert.assertTrue(targets.contains(board.getCell(0, 2)));
-		Assert.assertTrue(targets.contains(board.getCell(1, 1)));
-		Assert.assertTrue(targets.contains(board.getCell(1, 3)));
-		Assert.assertTrue(targets.contains(board.getCell(2, 0)));
-		Assert.assertTrue(targets.contains(board.getCell(2, 2)));
+		Assert.assertEquals(3, targets.size());
 		Assert.assertTrue(targets.contains(board.getCell(3, 1)));
+		Assert.assertTrue(targets.contains(board.getCell(2, 2)));
+		Assert.assertTrue(targets.contains(board.getCell(1, 3)));
 	}
 	
 	//tests target list when player has 4 steps and is adjacent to a room. Also moves player start loc to middle of board
