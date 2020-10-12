@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.Set;
 
 import org.junit.Assert;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 
 import experiment.TestBoard;
 import experiment.TestBoardCell;
@@ -19,7 +19,7 @@ class BoardTestsExp {
 		board = new TestBoard();
 	}
 
-	//Checks adjacency lift from top left of board
+	//Checks adjacency list from top left of board
 	@Test
 	public void testAdjacencyTopLeft() {
 		TestBoardCell cell = board.getCell(0,0);
