@@ -1,15 +1,17 @@
 package clueGame;
 
 import java.util.*;
+import java.io.*;
 
 public class Board {
 
-	final static int ROWS = 25;
-	final static int COLS = 24;
-
+	private int rows;
+	private int cols;
+	private String roomName;
+	private char roomSymbol;
 	private String layoutConfigFile;
 	private String setupConfigFile;
-	private Map<Character, Room> roomMap;
+	private Map<Character, Room> roomMap = new HashMap<Character, Room>();
 	private BoardCell[][] grid;
 	private Set<BoardCell> targets = new HashSet<BoardCell>();
 	private Set<BoardCell> visited = new HashSet<BoardCell>();
@@ -17,9 +19,12 @@ public class Board {
 	private static Board theInstance = new Board();
 
 	private Board() {
-		initializeBoard();
-		for (int i = 0; i < ROWS; i++) {
-			for (int j = 0; j < COLS; j++) {
+		
+	}
+	
+	public void initializeAdjLists() {
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
 				generateAdjList(i, j);
 			}
 		}
@@ -30,33 +35,94 @@ public class Board {
 	}
 
 	public void initializeBoard() {
-		grid = new BoardCell[ROWS][COLS];
-		for (int i = 0; i < ROWS; i++) {
-			for (int j = 0; j < COLS; j++) {
+		grid = new BoardCell[rows][cols];
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
 				grid[i][j] = new BoardCell(i, j);
 			}
 		}
 	}
-	
+
 	public void initialize() {
-		
+		try {
+			loadConfigFiles();
+		} catch (FileNotFoundException e) {
+			System.out.println(e);
+		}
+		initializeBoard();
+		initializeAdjLists();
 	}
-	
+
 	public void setConfigFiles(String layoutFile, String setupFile) {
 		this.layoutConfigFile = layoutFile;
 		this.setupConfigFile = setupFile;
 	}
-	
-	public void loadConfigFiles() {
-		
+
+	public void loadConfigFiles() throws FileNotFoundException {
+		loadSetupConfig();
+		loadLayoutConfig();
 	}
-	
-	public void loadSetupConfig() {
-		
+
+	public void loadSetupConfig() throws FileNotFoundException {
+		Room room = new Room();
+		String temp;
+		char symbol;
+		File setupFile = new File(setupConfigFile);
+		Scanner in = new Scanner(setupFile);
+		while (in.hasNextLine()) {
+			temp = in.nextLine();
+			if (!temp.startsWith("//")) {
+				for (String val : temp.split(",")) {
+					if(val.startsWith(" ")) {
+						if(val.length() == 1) {
+							symbol = val.charAt(0);
+							room.setSymbol(symbol);
+						} else {
+							val = val.substring(1, val.length());
+							room.setName(val);
+						}
+					}
+				}
+				roomMap.put(room.getSymbol(), room);
+			}
+		}
+		in.close();
 	}
-	
-	public void loadLayoutConfig() {
+
+	public void loadLayoutConfig() throws FileNotFoundException {
+		String temp;
+		char symbol;
+		int rowCounter = 0;
+		int colCounter = 0;
+		File layoutFile = new File(layoutConfigFile);
+		//First gets the num rows and cols
+		Scanner in = new Scanner(layoutFile);
+		while (in.hasNextLine()) {
+			temp = in.nextLine();
+			colCounter = 0;
+			for (String val : temp.split(",")) {
+				colCounter++;
+			}
+			this.cols = colCounter;
+			rowCounter++;
+		}
+		this.rows = rowCounter;
+		System.out.println("Rows: " + this.rows + ", Cols: " + this.cols);
+		in.close();
 		
+		Scanner in2 = new Scanner(layoutFile);
+		while (in2.hasNextLine()) {
+			temp = in2.nextLine();
+			for (String val : temp.split(",")) {
+				if (val.length() == 1) {
+					symbol = val.charAt(0);
+					roomMap.get(symbol);
+				} else {
+					
+				}
+			}
+		}
+		in2.close();
 	}
 
 	public void generateAdjList(int row, int col) {
@@ -64,7 +130,7 @@ public class Board {
 		//test for row edge cases
 		if (row == 0) {
 			temp.adjList.add(this.getCell(row+1, col));
-		} else if (row == ROWS-1) {
+		} else if (row == this.rows-1) {
 			temp.adjList.add(this.getCell(row - 1, col));
 		} else {
 			//if not edge, must be in middle
@@ -74,7 +140,7 @@ public class Board {
 		//test for col edge cases
 		if (col == 0) {
 			temp.adjList.add(this.getCell(row, col+1));
-		} else if (col == COLS-1) {
+		} else if (col == this.cols-1) {
 			temp.adjList.add(this.getCell(row, col-1));
 		} else {
 			//not edge so must be in middle
@@ -118,18 +184,18 @@ public class Board {
 		BoardCell temp = this.grid[row][col];
 		return temp;
 	}
-	
+
 	public Room getRoom(char symbol) {
 		Room temp = new Room();
 		return temp;
 	}
-	
+
 	public int getNumRows() {
-		return ROWS;
+		return this.rows;
 	}
-	
+
 	public int getNumCols() {
-		return COLS;
+		return this.cols;
 	}
 
 	public Room getRoom(BoardCell cell) {
