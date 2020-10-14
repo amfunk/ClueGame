@@ -23,29 +23,12 @@ public class Board {
 
 	}
 
-	public void initializeAdjLists() {
-		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < cols; j++) {
-				generateAdjList(i, j);
-			}
-		}
-	}
-
 	public static Board getInstance() {
 		return theInstance;
 	}
 
-	public void initializeBoard() {
-		grid = new BoardCell[rows][cols];
-		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < cols; j++) {
-				grid[i][j] = new BoardCell(i, j);
-			}
-		}
-	}
-
 	public void initialize() {
-		roomMap = new HashMap<Character, Room>();
+		roomMap = new HashMap<Character, Room>(); //allocates memory for a new roomMap upon each new call to initialize
 		try {
 			loadConfigFiles();
 		} catch (FileNotFoundException e) {
@@ -73,13 +56,14 @@ public class Board {
 		Scanner in = new Scanner(setupFile);
 		while (in.hasNextLine()) {
 			temp = in.nextLine();
+			//ignores any commented lines
 			if (!temp.startsWith("//")) {
-				room = new Room();
+				room = new Room(); //allocates new memory for each room that must be added to roomMap
 				if(temp.startsWith("Room")) {
 					room.setRoom(true);
 				} else if (temp.startsWith("Space")) {
 					room.setRoom(false);
-				} else {
+				} else { //since the description must be either Room or Space, throw exception for anything else
 					throw new BadConfigFormatException("Not a recognized cell type");
 				}
 				for (String val : temp.split(",")) {
@@ -87,7 +71,7 @@ public class Board {
 						//removes space from substring
 						val = val.substring(1, val.length());
 						if(val.length() == 1) {
-							symbol = val.charAt(0);
+							symbol = val.charAt(0); // converts string into char
 							room.setSymbol(symbol);
 						} else {
 							room.setName(val);
@@ -101,13 +85,100 @@ public class Board {
 	}
 
 	public void loadLayoutConfig() throws FileNotFoundException, BadConfigFormatException {
+		
+		//does initial scan of layout file to determine rows and cols
+		parseRowsCols();
+
+		//initializes the board and adjList
+		initializeBoard();
+		initializeAdjLists();
+
+		//populates the board with the values from the layout file
+		populateBoardCells();
+	}
+	
+	// Helper Functions are found below this point
+	//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+	//
+	//
+	//
+	
+	private void populateBoardCells() throws FileNotFoundException, BadConfigFormatException {
+		
 		String temp;
 		Character symbol;
 		BoardCell cell;
-		int colsPerRow = 0;
 		int rowCounter = 0;
 		int colCounter = 0;
 		Character modifier;
+		
+		File layoutFile = new File(layoutConfigFile);
+		rowCounter = 0;
+		colCounter = 0;
+		Scanner in = new Scanner(layoutFile);
+		while (in.hasNextLine()) {
+			temp = in.nextLine();
+			colCounter = 0;
+			//splits up each row by the commas
+			for (String val : temp.split(",")) {
+				//if the string length is 1, this must be a normal cell
+				if (val.length() == 1) {
+					//converts string input into a char
+					symbol = val.charAt(0);
+					cell = getCell(rowCounter, colCounter);
+					if (!roomMap.containsKey(symbol)) {
+						throw new BadConfigFormatException("Room on board is not listed under setup file");
+					}
+					cell.setRoom(roomMap.get(symbol));
+					cell.setIsRoom(cell.getRoom().isRoom());
+				} else {
+					cell = getCell(rowCounter,colCounter);
+					//since this cell has more than one character, splits it into the initial symbol and then modifier
+					symbol = val.charAt(0);
+					modifier = val.charAt(1);
+					cell.setRoom(roomMap.get(symbol));
+					cell.setIsRoom(cell.getRoom().isRoom());
+					interpretModifier(cell, modifier); //called to determine the type of board cell
+				}
+				colCounter++;
+			}
+			rowCounter++;
+		}
+		in.close();		
+	}
+
+	private void interpretModifier(BoardCell cell, Character modifier) {
+		
+		if (modifier.equals('#')) {
+			cell.getRoom().setLabelCell(cell);
+			cell.setRoomLabel(true);
+		} else if (modifier.equals('*')) {
+			cell.getRoom().setCenterCell(cell);
+			cell.setRoomCenter(true);
+		} else if (modifier.equals('^')) {
+			cell.setIsDoorway(true);
+			cell.setDoorDirection(DoorDirection.UP);
+		} else if (modifier.equals('v')) {
+			cell.setIsDoorway(true);
+			cell.setDoorDirection(DoorDirection.DOWN);
+		} else if (modifier.equals('<')) {
+			cell.setIsDoorway(true);
+			cell.setDoorDirection(DoorDirection.LEFT);
+		} else if (modifier.equals('>')) {
+			cell.setIsDoorway(true);
+			cell.setDoorDirection(DoorDirection.RIGHT);
+		} else {
+			cell.setSecretPassage(modifier);
+		}	
+		
+	}
+
+	public void parseRowsCols() throws FileNotFoundException, BadConfigFormatException {
+		
+		String temp;
+		int colsPerRow = 0;
+		int rowCounter = 0;
+		int colCounter = 0;
 		
 		File layoutFile = new File(layoutConfigFile);
 		//First gets the num rows and cols
@@ -118,9 +189,10 @@ public class Board {
 			for (String val : temp.split(",")) {
 				colCounter++;
 			}
+			//finds size of initial row
 			if (rowCounter == 0) {
 				colsPerRow = colCounter;
-			} else if (colCounter != colsPerRow){
+			} else if (colCounter != colsPerRow){ // if any rows don't match the size of initial row, throws exception
 				throw new BadConfigFormatException("Number of columns per row isn't constant");
 			}
 			this.cols = colCounter;
@@ -128,60 +200,25 @@ public class Board {
 		}
 		this.rows = rowCounter;
 		in.close();
-
-		//initializes the board after scanning in rows and cols
-		initializeBoard();
-		initializeAdjLists();
-
-		rowCounter = 0;
-		colCounter = 0;
-		Scanner in2 = new Scanner(layoutFile);
-		while (in2.hasNextLine()) {
-			temp = in2.nextLine();
-			colCounter = 0;
-			for (String val : temp.split(",")) {
-				if (val.length() == 1) {
-					symbol = val.charAt(0);
-					cell = getCell(rowCounter, colCounter);
-					if (!roomMap.containsKey(symbol)) {
-						throw new BadConfigFormatException("Room on board is not listed under setup file");
-					}
-					cell.setRoom(roomMap.get(symbol));
-					cell.setIsRoom(cell.getRoom().isRoom());
-				} else {
-					cell = getCell(rowCounter,colCounter);
-					symbol = val.charAt(0);
-					modifier = val.charAt(1);
-					cell.setRoom(roomMap.get(symbol));
-					cell.setIsRoom(cell.getRoom().isRoom());
-					if (modifier.equals('#')) {
-						cell.getRoom().setLabelCell(cell);
-						cell.setRoomLabel(true);
-					} else if (modifier.equals('*')) {
-						cell.getRoom().setCenterCell(cell);
-						cell.setRoomCenter(true);
-					} else if (modifier.equals('^')) {
-						cell.setIsDoorway(true);
-						cell.setDoorDirection(DoorDirection.UP);
-					} else if (modifier.equals('v')) {
-						cell.setIsDoorway(true);
-						cell.setDoorDirection(DoorDirection.DOWN);
-					} else if (modifier.equals('<')) {
-						cell.setIsDoorway(true);
-						cell.setDoorDirection(DoorDirection.LEFT);
-					} else if (modifier.equals('>')) {
-						cell.setIsDoorway(true);
-						cell.setDoorDirection(DoorDirection.RIGHT);
-					} else {
-						cell.setSecretPassage(modifier);
-					}	
-				}
-				colCounter++;
-			}
-			rowCounter++;
-		}
-		in2.close();
 	}
+	
+	public void initializeBoard() {
+		grid = new BoardCell[rows][cols];
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				grid[i][j] = new BoardCell(i, j);
+			}
+		}
+	}
+
+	public void initializeAdjLists() {
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				generateAdjList(i, j);
+			}
+		}
+	}
+
 
 	public void generateAdjList(int row, int col) {
 		BoardCell temp = this.getCell(row, col);
