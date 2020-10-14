@@ -50,6 +50,8 @@ public class Board {
 			loadConfigFiles();
 		} catch (FileNotFoundException e) {
 			System.out.println(e);
+		} catch (BadConfigFormatException e) {
+			System.out.println(e);
 		}
 	}
 
@@ -58,12 +60,12 @@ public class Board {
 		this.setupConfigFile = setupFile;
 	}
 
-	public void loadConfigFiles() throws FileNotFoundException {
+	public void loadConfigFiles() throws FileNotFoundException, BadConfigFormatException {
 		loadSetupConfig();
 		loadLayoutConfig();
 	}
 
-	public void loadSetupConfig() throws FileNotFoundException {
+	public void loadSetupConfig() throws FileNotFoundException, BadConfigFormatException {
 		Room room;
 		String temp;
 		char symbol;
@@ -73,44 +75,40 @@ public class Board {
 			temp = in.nextLine();
 			if (!temp.startsWith("//")) {
 				room = new Room();
+				if(temp.startsWith("Room")) {
+					room.setRoom(true);
+				} else if (temp.startsWith("Space")) {
+					room.setRoom(false);
+				} else {
+					throw new BadConfigFormatException("Not a recognized cell type");
+				}
 				for (String val : temp.split(",")) {
-//					if(val.startsWith("Room")) {
-//						room.setRoom(true);
-//					} else if (val.startsWith("Space")) {
-//						room.setRoom(false);
-//					} else {
-//						//throw exception
-//					}
 					if(val.startsWith(" ")) {
 						//removes space from substring
 						val = val.substring(1, val.length());
 						if(val.length() == 1) {
 							symbol = val.charAt(0);
-							//System.out.print(symbol);
 							room.setSymbol(symbol);
 						} else {
 							room.setName(val);
-							//System.out.print(val);
 						}
 					}
 				}
-				roomMap.put(room.getSymbol(), room);
-				//System.out.println("Printing room associated with " + room.getSymbol() + " in roomMap: " + roomMap.get(room.getSymbol()).getName());
-				//System.out.println();
-				
+				roomMap.put(room.getSymbol(), room);				
 			}
 		}
 		in.close();
 	}
 
-	public void loadLayoutConfig() throws FileNotFoundException {
+	public void loadLayoutConfig() throws FileNotFoundException, BadConfigFormatException {
 		String temp;
 		Character symbol;
 		BoardCell cell;
+		int colsPerRow = 0;
 		int rowCounter = 0;
 		int colCounter = 0;
 		Character modifier;
-
+		
 		File layoutFile = new File(layoutConfigFile);
 		//First gets the num rows and cols
 		Scanner in = new Scanner(layoutFile);
@@ -120,11 +118,15 @@ public class Board {
 			for (String val : temp.split(",")) {
 				colCounter++;
 			}
+			if (rowCounter == 0) {
+				colsPerRow = colCounter;
+			} else if (colCounter != colsPerRow){
+				throw new BadConfigFormatException("Number of columns per row isn't constant");
+			}
 			this.cols = colCounter;
 			rowCounter++;
 		}
 		this.rows = rowCounter;
-		System.out.println("Rows: " + this.rows + ", Cols: " + this.cols);
 		in.close();
 
 		//initializes the board after scanning in rows and cols
@@ -140,11 +142,10 @@ public class Board {
 			for (String val : temp.split(",")) {
 				if (val.length() == 1) {
 					symbol = val.charAt(0);
-					if(roomMap.containsKey(symbol)) {
-						System.out.println("Contains key " + symbol);
-					}
-					//System.out.println("Symbol: " + symbol + ", roomMap room name: " + this.roomMap.get('K').getName());
 					cell = getCell(rowCounter, colCounter);
+					if (!roomMap.containsKey(symbol)) {
+						throw new BadConfigFormatException("Room on board is not listed under setup file");
+					}
 					cell.setRoom(roomMap.get(symbol));
 					cell.setIsRoom(cell.getRoom().isRoom());
 				} else {

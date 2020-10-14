@@ -50,7 +50,6 @@ public class BoardCell {
 	}
 
 	public boolean isDoorway() {
-		// TODO Auto-generated method stub
 		return this.isDoorway;
 	}
 	
