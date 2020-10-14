@@ -11,7 +11,8 @@ public class Board {
 	private char roomSymbol;
 	private String layoutConfigFile;
 	private String setupConfigFile;
-	private Map<Character, Room> roomMap = new HashMap<Character, Room>();
+	private Map<Character, Room> roomMap;
+
 	private BoardCell[][] grid;
 	private Set<BoardCell> targets = new HashSet<BoardCell>();
 	private Set<BoardCell> visited = new HashSet<BoardCell>();
@@ -19,9 +20,9 @@ public class Board {
 	private static Board theInstance = new Board();
 
 	private Board() {
-		
+
 	}
-	
+
 	public void initializeAdjLists() {
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
@@ -44,13 +45,12 @@ public class Board {
 	}
 
 	public void initialize() {
+		roomMap = new HashMap<Character, Room>();
 		try {
 			loadConfigFiles();
 		} catch (FileNotFoundException e) {
 			System.out.println(e);
 		}
-		initializeBoard();
-		initializeAdjLists();
 	}
 
 	public void setConfigFiles(String layoutFile, String setupFile) {
@@ -64,7 +64,7 @@ public class Board {
 	}
 
 	public void loadSetupConfig() throws FileNotFoundException {
-		Room room = new Room();
+		Room room;
 		String temp;
 		char symbol;
 		File setupFile = new File(setupConfigFile);
@@ -72,18 +72,32 @@ public class Board {
 		while (in.hasNextLine()) {
 			temp = in.nextLine();
 			if (!temp.startsWith("//")) {
+				room = new Room();
 				for (String val : temp.split(",")) {
+//					if(val.startsWith("Room")) {
+//						room.setRoom(true);
+//					} else if (val.startsWith("Space")) {
+//						room.setRoom(false);
+//					} else {
+//						//throw exception
+//					}
 					if(val.startsWith(" ")) {
+						//removes space from substring
+						val = val.substring(1, val.length());
 						if(val.length() == 1) {
 							symbol = val.charAt(0);
+							//System.out.print(symbol);
 							room.setSymbol(symbol);
 						} else {
-							val = val.substring(1, val.length());
 							room.setName(val);
+							//System.out.print(val);
 						}
 					}
 				}
 				roomMap.put(room.getSymbol(), room);
+				//System.out.println("Printing room associated with " + room.getSymbol() + " in roomMap: " + roomMap.get(room.getSymbol()).getName());
+				//System.out.println();
+				
 			}
 		}
 		in.close();
@@ -91,9 +105,12 @@ public class Board {
 
 	public void loadLayoutConfig() throws FileNotFoundException {
 		String temp;
-		char symbol;
+		Character symbol;
+		BoardCell cell;
 		int rowCounter = 0;
 		int colCounter = 0;
+		Character modifier;
+
 		File layoutFile = new File(layoutConfigFile);
 		//First gets the num rows and cols
 		Scanner in = new Scanner(layoutFile);
@@ -109,18 +126,58 @@ public class Board {
 		this.rows = rowCounter;
 		System.out.println("Rows: " + this.rows + ", Cols: " + this.cols);
 		in.close();
-		
+
+		//initializes the board after scanning in rows and cols
+		initializeBoard();
+		initializeAdjLists();
+
+		rowCounter = 0;
+		colCounter = 0;
 		Scanner in2 = new Scanner(layoutFile);
 		while (in2.hasNextLine()) {
 			temp = in2.nextLine();
+			colCounter = 0;
 			for (String val : temp.split(",")) {
 				if (val.length() == 1) {
 					symbol = val.charAt(0);
-					roomMap.get(symbol);
+					if(roomMap.containsKey(symbol)) {
+						System.out.println("Contains key " + symbol);
+					}
+					//System.out.println("Symbol: " + symbol + ", roomMap room name: " + this.roomMap.get('K').getName());
+					cell = getCell(rowCounter, colCounter);
+					cell.setRoom(roomMap.get(symbol));
+					cell.setIsRoom(cell.getRoom().isRoom());
 				} else {
-					
+					cell = getCell(rowCounter,colCounter);
+					symbol = val.charAt(0);
+					modifier = val.charAt(1);
+					cell.setRoom(roomMap.get(symbol));
+					cell.setIsRoom(cell.getRoom().isRoom());
+					if (modifier.equals('#')) {
+						cell.getRoom().setLabelCell(cell);
+						cell.setRoomLabel(true);
+					} else if (modifier.equals('*')) {
+						cell.getRoom().setCenterCell(cell);
+						cell.setRoomCenter(true);
+					} else if (modifier.equals('^')) {
+						cell.setIsDoorway(true);
+						cell.setDoorDirection(DoorDirection.UP);
+					} else if (modifier.equals('v')) {
+						cell.setIsDoorway(true);
+						cell.setDoorDirection(DoorDirection.DOWN);
+					} else if (modifier.equals('<')) {
+						cell.setIsDoorway(true);
+						cell.setDoorDirection(DoorDirection.LEFT);
+					} else if (modifier.equals('>')) {
+						cell.setIsDoorway(true);
+						cell.setDoorDirection(DoorDirection.RIGHT);
+					} else {
+						cell.setSecretPassage(modifier);
+					}	
 				}
+				colCounter++;
 			}
+			rowCounter++;
 		}
 		in2.close();
 	}
@@ -154,7 +211,7 @@ public class Board {
 		for (BoardCell cell : startCell.adjList) {
 			if (!visited.contains(cell) && cell.getIsOccupied() == false) {
 				visited.add(cell);
-				if (cell.getIsRoom() == true) {
+				if (cell.isRoom() == true) {
 					targets.add(cell);
 					//if the cell is a room, then the path must stop here so it adds cell to targets and doesn't execute recursive function
 				} else if (pathlength == 1) {
@@ -186,7 +243,12 @@ public class Board {
 	}
 
 	public Room getRoom(char symbol) {
-		Room temp = new Room();
+		Room temp = roomMap.get(symbol);
+		return temp;
+	}
+
+	public Room getRoom(BoardCell cell) {
+		Room temp = cell.getRoom();
 		return temp;
 	}
 
@@ -196,11 +258,6 @@ public class Board {
 
 	public int getNumCols() {
 		return this.cols;
-	}
-
-	public Room getRoom(BoardCell cell) {
-		Room temp = new Room();
-		return temp;
 	}
 
 }
