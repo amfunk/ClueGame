@@ -89,9 +89,8 @@ public class Board {
 		//does initial scan of layout file to determine rows and cols
 		parseRowsCols();
 
-		//initializes the board and adjList
+		//initializes the board
 		initializeBoard();
-		initializeAdjLists();
 
 		//populates the board with the values from the layout file
 		populateBoardCells();
@@ -211,16 +210,17 @@ public class Board {
 		}
 	}
 
-	public void initializeAdjLists() {
-		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < cols; j++) {
-				generateAdjList(i, j);
-			}
-		}
-	}
+//	public void initializeAdjLists() {
+//		for (int i = 0; i < rows; i++) {
+//			for (int j = 0; j < cols; j++) {
+//				generateAdjList(i, j);
+//			}
+//		}
+//	}
 
 
-	public void generateAdjList(int row, int col) {
+	//TODO: will have to edit this test to meet complex board requirements
+	public Set<BoardCell> getAdjList(int row, int col) {
 		BoardCell temp = this.getCell(row, col);
 		//test for row edge cases
 		if (row == 0) {
@@ -242,6 +242,9 @@ public class Board {
 			temp.adjList.add(this.getCell(row, col+1));
 			temp.adjList.add(this.getCell(row, col-1));
 		}
+		
+		//TODO: must fix return
+		return new HashSet<BoardCell>();
 
 	}
 

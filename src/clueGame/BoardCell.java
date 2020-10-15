@@ -21,10 +21,6 @@ public class BoardCell {
 		this.col = col;
 	}
 	
-	public Set<BoardCell> getAdjList() {
-		return this.adjList;
-	}
-	
 	public void setIsRoom(boolean isRoom) {
 		if (isRoom) {
 			this.isRoom = true;
@@ -37,7 +33,7 @@ public class BoardCell {
 		return this.isRoom;
 	}
 	
-	public void setIsOccupied(boolean isOccupied) {
+	public void setOccupied(boolean isOccupied) {
 		if (isOccupied) {
 			this.isOccupied = true;
 		} else {
