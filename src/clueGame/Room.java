@@ -5,7 +5,10 @@ public class Room {
 	private Character symbol;
 	private BoardCell centerCell;
 	private BoardCell labelCell;
-	private boolean isRoom;
+	private char secretPassage;
+	private boolean isRoom = false;
+	private boolean isWalkway = false;
+	private boolean hasSecretPassage = false;
 	
 	public void setName(String name) {
 		this.name = name;
@@ -45,5 +48,29 @@ public class Room {
 
 	public void setRoom(boolean isRoom) {
 		this.isRoom = isRoom;
+	}
+
+	public boolean isWalkway() {
+		return isWalkway;
+	}
+
+	public void setWalkway(boolean isWalkway) {
+		this.isWalkway = isWalkway;
+	}
+
+	public boolean isHasSecretPassage() {
+		return hasSecretPassage;
+	}
+
+	public void setHasSecretPassage(boolean hasSecretPassage) {
+		this.hasSecretPassage = hasSecretPassage;
+	}
+
+	public char getSecretPassage() {
+		return secretPassage;
+	}
+
+	public void setSecretPassage(char secretPassage) {
+		this.secretPassage = secretPassage;
 	}
 }

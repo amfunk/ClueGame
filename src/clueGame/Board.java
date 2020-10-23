@@ -85,7 +85,7 @@ public class Board {
 	}
 
 	public void loadLayoutConfig() throws FileNotFoundException, BadConfigFormatException {
-		
+
 		//does initial scan of layout file to determine rows and cols
 		parseRowsCols();
 
@@ -95,22 +95,22 @@ public class Board {
 		//populates the board with the values from the layout file
 		populateBoardCells();
 	}
-	
+
 	// Helper Functions are found below this point
 	//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 	//
 	//
 	//
-	
+
 	private void populateBoardCells() throws FileNotFoundException, BadConfigFormatException {
-		
+
 		String temp;
 		Character symbol;
 		BoardCell cell;
 		int rowCounter = 0;
 		int colCounter = 0;
 		Character modifier;
-		
+
 		File layoutFile = new File(layoutConfigFile);
 		rowCounter = 0;
 		colCounter = 0;
@@ -138,6 +138,9 @@ public class Board {
 					cell.setRoom(roomMap.get(symbol));
 					cell.setIsRoom(cell.getRoom().isRoom());
 					interpretModifier(cell, modifier); //called to determine the type of board cell
+					if (cell.isDoorway()) {
+						cell.getRoom().setWalkway(true);
+					}
 				}
 				colCounter++;
 			}
@@ -147,7 +150,7 @@ public class Board {
 	}
 
 	private void interpretModifier(BoardCell cell, Character modifier) {
-		
+
 		if (modifier.equals('#')) {
 			cell.getRoom().setLabelCell(cell);
 			cell.setRoomLabel(true);
@@ -168,17 +171,19 @@ public class Board {
 			cell.setDoorDirection(DoorDirection.RIGHT);
 		} else {
 			cell.setSecretPassage(modifier);
+			cell.getRoom().setSecretPassage(modifier);
+			cell.getRoom().setHasSecretPassage(true);
 		}	
-		
+
 	}
 
 	public void parseRowsCols() throws FileNotFoundException, BadConfigFormatException {
-		
+
 		String temp;
 		int colsPerRow = 0;
 		int rowCounter = 0;
 		int colCounter = 0;
-		
+
 		File layoutFile = new File(layoutConfigFile);
 		//First gets the num rows and cols
 		Scanner in = new Scanner(layoutFile);
@@ -200,7 +205,7 @@ public class Board {
 		this.rows = rowCounter;
 		in.close();
 	}
-	
+
 	public void initializeBoard() {
 		grid = new BoardCell[rows][cols];
 		for (int i = 0; i < rows; i++) {
@@ -210,43 +215,116 @@ public class Board {
 		}
 	}
 
-//	public void initializeAdjLists() {
-//		for (int i = 0; i < rows; i++) {
-//			for (int j = 0; j < cols; j++) {
-//				generateAdjList(i, j);
-//			}
-//		}
-//	}
+	//	public void initializeAdjLists() {
+	//		for (int i = 0; i < rows; i++) {
+	//			for (int j = 0; j < cols; j++) {
+	//				generateAdjList(i, j);
+	//			}
+	//		}
+	//	}
 
 
+	//
+	//
+	//CONTAINS ALL ADJ FUNCTIONS
+	//
+	//
 	//TODO: will have to edit this test to meet complex board requirements
 	public Set<BoardCell> getAdjList(int row, int col) {
 		BoardCell temp = this.getCell(row, col);
+
+		Room room = temp.getRoom();
+		if (room.isRoom()) {
+			if (temp.isRoomCenter()) {
+				roomAdj(temp);
+			}
+		} else if (room.isWalkway()) {
+			if (temp.isDoorway()) {
+				doorAdj(temp);
+			}
+			walkwayAdj(temp);
+		}
+
+		return temp.adjList;
+	}
+
+	public void walkwayAdj(BoardCell cell) {
 		//test for row edge cases
-		if (row == 0) {
-			temp.adjList.add(this.getCell(row+1, col));
-		} else if (row == this.rows-1) {
-			temp.adjList.add(this.getCell(row - 1, col));
-		} else {
+		BoardCell test;
+		if (cell.getRow() == 0) { // left edge of board
+			test = this.getCell(cell.getRow()+1, cell.getCol());
+			if(test.getRoom().isWalkway()) {
+				cell.adjList.add(this.getCell(cell.getRow()+1, cell.getCol()));
+			}
+		} else if (cell.getRow() == this.rows-1) { //right edge of board
+			test = this.getCell(cell.getRow() - 1, cell.getCol());
+			if(test.getRoom().isWalkway()) {
+				cell.adjList.add(this.getCell(cell.getRow() - 1, cell.getCol()));
+			}
+		} else { 
 			//if not edge, must be in middle
-			temp.adjList.add(this.getCell(row+1, col));
-			temp.adjList.add(this.getCell(row - 1, col));
+			test = this.getCell(cell.getRow()+1, cell.getCol());
+			if(test.getRoom().isWalkway()) {
+				cell.adjList.add(this.getCell(cell.getRow()+1, cell.getCol()));
+			}
+			test = this.getCell(cell.getRow() - 1, cell.getCol());
+			if(test.getRoom().isWalkway()) {
+				cell.adjList.add(this.getCell(cell.getRow() - 1, cell.getCol()));
+			}
 		}
 		//test for col edge cases
-		if (col == 0) {
-			temp.adjList.add(this.getCell(row, col+1));
-		} else if (col == this.cols-1) {
-			temp.adjList.add(this.getCell(row, col-1));
-		} else {
+		if (cell.getCol() == 0) { //top edge of board
+			test = this.getCell(cell.getRow(), cell.getCol()+1);
+			if(test.getRoom().isWalkway()) {
+				cell.adjList.add(this.getCell(cell.getRow(), cell.getCol()+1));
+			}
+		} else if (cell.getCol() == this.cols-1) { //bottom edge of board
+			test = this.getCell(cell.getRow(), cell.getCol()-1);
+			if(test.getRoom().isWalkway()) {
+				cell.adjList.add(this.getCell(cell.getRow(), cell.getCol()-1));
+			}
+		} else { //
 			//not edge so must be in middle
-			temp.adjList.add(this.getCell(row, col+1));
-			temp.adjList.add(this.getCell(row, col-1));
+			test = this.getCell(cell.getRow(), cell.getCol()+1);
+			if(test.getRoom().isWalkway()) {
+				cell.adjList.add(this.getCell(cell.getRow(), cell.getCol()+1));
+			}
+			test = this.getCell(cell.getRow(), cell.getCol()-1);
+			if(test.getRoom().isWalkway()) {
+				cell.adjList.add(this.getCell(cell.getRow(), cell.getCol()-1));
+			}
 		}
-		
-		//TODO: must fix return
-		return new HashSet<BoardCell>();
+	}
+
+	public void doorAdj(BoardCell cell) {
+		BoardCell test;
+		if (cell.getDoorDirection() == DoorDirection.UP) {
+			test = this.getCell(cell.getRow() - 1,cell.getCol());
+			cell.adjList.add(test.getRoom().getCenterCell());
+		}
+		if (cell.getDoorDirection() == DoorDirection.DOWN) {
+			test = this.getCell(cell.getRow()+1,cell.getCol());
+			cell.adjList.add(test.getRoom().getCenterCell());
+		}
+		if (cell.getDoorDirection() == DoorDirection.LEFT) {
+			test = this.getCell(cell.getRow(),cell.getCol()-1);
+			cell.adjList.add(test.getRoom().getCenterCell());
+		}
+		if (cell.getDoorDirection() == DoorDirection.RIGHT) {
+			test = this.getCell(cell.getRow(),cell.getCol()+1);
+			cell.adjList.add(test.getRoom().getCenterCell());
+		}
+	}
+
+	public void roomAdj(BoardCell cell) {
 
 	}
+
+	//
+	//
+	//END OF ADJACENCY FUNCTIONS
+	//
+	//
 
 	public void findAllTargets(BoardCell startCell, int pathlength) {
 		for (BoardCell cell : startCell.adjList) {
