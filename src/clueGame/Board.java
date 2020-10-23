@@ -7,8 +7,6 @@ public class Board {
 
 	private int rows;
 	private int cols;
-	private String roomName;
-	private char roomSymbol;
 	private String layoutConfigFile;
 	private String setupConfigFile;
 	private Map<Character, Room> roomMap;
@@ -95,6 +93,7 @@ public class Board {
 		//populates the board with the values from the layout file
 		populateBoardCells();
 		
+		//generates adjacency lists for all boardcells that can be targets
 		intializeAdjLists();
 	}
 
@@ -220,7 +219,7 @@ public class Board {
 	//
 	//
 	//CONTAINS ALL ADJ FUNCTIONS
-	//
+	//vvvvvvvvvvvvvvvvvvvvvvvv
 	//
 	public Set<BoardCell> getAdjList(int row, int col) {
 		BoardCell temp = this.getCell(row, col);
@@ -239,11 +238,13 @@ public class Board {
 	public void generateAdjList(int row, int col) {
 		BoardCell temp = this.getCell(row, col);
 		Room room = temp.getRoom();
+		//differentiates between room and walkway before creating adj list
 		if (room.isRoom()) {
 			if (temp.isRoomCenter()) {
 				roomAdj(temp);
 			}
 		} else if (room.isWalkway()) {
+			//doorways are walkways, but only doorways will connect to a room, needs to run doorAdj()
 			if (temp.isDoorway()) {
 				doorAdj(temp);
 			}
@@ -253,8 +254,9 @@ public class Board {
 	}
 
 	public void walkwayAdj(BoardCell cell) {
-		//test for row edge cases
+		//only adds cells to adjlist if they are also a walkway to ensure that unused spaces and rooms aren't added		
 		BoardCell test;
+		//test for row edge cases
 		if (cell.getRow() == 0) { // left edge of board
 			test = this.getCell(cell.getRow()+1, cell.getCol());
 			if(test.getRoom().isWalkway()) {
@@ -301,6 +303,8 @@ public class Board {
 	}
 
 	public void doorAdj(BoardCell cell) {
+		//adds the room center to the doorways adjlist depending on the direction of the enum
+		//the last line of each if statement also adds the doorway to the rooms adjlist; this is much simpler than trying to find all doorways for each room center
 		BoardCell test;
 		if (cell.getDoorDirection() == DoorDirection.UP) {
 			test = this.getCell(cell.getRow() - 1,cell.getCol());
@@ -331,17 +335,17 @@ public class Board {
 			temp = this.roomMap.get(cell.getRoom().getSecretPassage());
 			cell.adjList.add(temp.getCenterCell());
 		}
-		
 	}
 
 	//
-	//
+	//^^^^^^^^^^^^^^^^^^^^^^^^^
 	//END OF ADJACENCY FUNCTIONS
 	//
 	//
 
 	public void findAllTargets(BoardCell startCell, int pathlength) {
 		for (BoardCell cell : startCell.adjList) {
+			//only visits space if it hasn't been visited, and if either the space isn't occupied or it is a room
 			if (!visited.contains(cell) && (cell.getIsOccupied() == false || cell.isRoomCenter())) {
 				visited.add(cell);
 				if (cell.getRoom().isRoom() == true) {
@@ -362,6 +366,7 @@ public class Board {
 
 
 	public void calcTargets(BoardCell startCell, int pathlength) {
+		//allocate memory for targets in calctargets function to prevent targets from carrying over from previous calculations
 		targets = new HashSet<BoardCell>();
 		visited.add(startCell);
 		findAllTargets(startCell, pathlength);
