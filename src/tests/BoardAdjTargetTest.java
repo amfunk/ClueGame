@@ -75,9 +75,9 @@ public class BoardAdjTargetTest {
 		assertTrue(test.contains(board.getCell(18, 13)));
 		assertTrue(test.contains(board.getCell(18, 14)));
 
-		//test control center which has two entrances on each sides
+		//test control center which has two entrances on each sides and a secret passage
 		test = board.getAdjList(22, 21);
-		assertEquals(2, test.size());
+		assertEquals(3, test.size());
 		assertTrue(test.contains(board.getCell(19, 21)));
 		assertTrue(test.contains(board.getCell(22, 18)));
 	}
@@ -153,8 +153,8 @@ public class BoardAdjTargetTest {
 		assertTrue(targets.contains(board.getCell(8, 9)));
 		assertTrue(targets.contains(board.getCell(11, 10)));
 		assertTrue(targets.contains(board.getCell(10, 9)));	
-		assertFalse( targets.contains( board.getCell(13, 10)));
-		assertFalse( targets.contains( board.getCell(12, 9))) ;
+		assertTrue( targets.contains( board.getCell(13, 10)));
+		assertTrue( targets.contains( board.getCell(12, 9))) ;
 
 		// we want to make sure we can get into a room, even if flagged as occupied
 		//this test also covers targets from a doorway
@@ -177,7 +177,7 @@ public class BoardAdjTargetTest {
 		assertEquals(1, targets.size());
 		//since doorway is blocked, only option is to use secret passage,
 		//covers that as well
-		assertTrue(targets.contains(board.getCell(2,3)));
+		assertTrue(targets.contains(board.getCell(3, 22)));
 	}
 
 	@Test
@@ -201,7 +201,7 @@ public class BoardAdjTargetTest {
 		//tests with roll of 4
 		board.calcTargets(board.getCell(25, 8), 4);
 		targets = board.getTargets();
-		assertEquals(3, targets.size());
+		assertEquals(4, targets.size());
 		assertTrue(targets.contains(board.getCell(23, 8)));
 		assertTrue(targets.contains(board.getCell(22, 7)));
 		assertTrue(targets.contains(board.getCell(21, 8)));

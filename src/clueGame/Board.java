@@ -14,7 +14,7 @@ public class Board {
 	private Map<Character, Room> roomMap;
 
 	private BoardCell[][] grid;
-	private Set<BoardCell> targets = new HashSet<BoardCell>();
+	private Set<BoardCell> targets;
 	private Set<BoardCell> visited = new HashSet<BoardCell>();
 
 	private static Board theInstance = new Board();
@@ -94,6 +94,8 @@ public class Board {
 
 		//populates the board with the values from the layout file
 		populateBoardCells();
+		
+		intializeAdjLists();
 	}
 
 	// Helper Functions are found below this point
@@ -215,24 +217,27 @@ public class Board {
 		}
 	}
 
-	//	public void initializeAdjLists() {
-	//		for (int i = 0; i < rows; i++) {
-	//			for (int j = 0; j < cols; j++) {
-	//				generateAdjList(i, j);
-	//			}
-	//		}
-	//	}
-
-
 	//
 	//
 	//CONTAINS ALL ADJ FUNCTIONS
 	//
 	//
-	//TODO: will have to edit this test to meet complex board requirements
 	public Set<BoardCell> getAdjList(int row, int col) {
 		BoardCell temp = this.getCell(row, col);
-
+		
+		return temp.adjList;
+	}
+	
+	public void intializeAdjLists() {
+		for(int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				generateAdjList(i, j);
+			}
+		}
+	}
+	
+	public void generateAdjList(int row, int col) {
+		BoardCell temp = this.getCell(row, col);
 		Room room = temp.getRoom();
 		if (room.isRoom()) {
 			if (temp.isRoomCenter()) {
@@ -244,8 +249,7 @@ public class Board {
 			}
 			walkwayAdj(temp);
 		}
-
-		return temp.adjList;
+		
 	}
 
 	public void walkwayAdj(BoardCell cell) {
@@ -301,23 +305,33 @@ public class Board {
 		if (cell.getDoorDirection() == DoorDirection.UP) {
 			test = this.getCell(cell.getRow() - 1,cell.getCol());
 			cell.adjList.add(test.getRoom().getCenterCell());
+			test.getRoom().getCenterCell().adjList.add(cell);
 		}
 		if (cell.getDoorDirection() == DoorDirection.DOWN) {
 			test = this.getCell(cell.getRow()+1,cell.getCol());
 			cell.adjList.add(test.getRoom().getCenterCell());
+			test.getRoom().getCenterCell().adjList.add(cell);
 		}
 		if (cell.getDoorDirection() == DoorDirection.LEFT) {
 			test = this.getCell(cell.getRow(),cell.getCol()-1);
 			cell.adjList.add(test.getRoom().getCenterCell());
+			test.getRoom().getCenterCell().adjList.add(cell);
 		}
 		if (cell.getDoorDirection() == DoorDirection.RIGHT) {
 			test = this.getCell(cell.getRow(),cell.getCol()+1);
 			cell.adjList.add(test.getRoom().getCenterCell());
+			test.getRoom().getCenterCell().adjList.add(cell);
 		}
 	}
 
 	public void roomAdj(BoardCell cell) {
-
+		Room temp;
+		if (cell.getRoom().hasSecretPassage()) {
+			//gets the room that is connected to this by a secretpassage
+			temp = this.roomMap.get(cell.getRoom().getSecretPassage());
+			cell.adjList.add(temp.getCenterCell());
+		}
+		
 	}
 
 	//
@@ -328,9 +342,9 @@ public class Board {
 
 	public void findAllTargets(BoardCell startCell, int pathlength) {
 		for (BoardCell cell : startCell.adjList) {
-			if (!visited.contains(cell) && cell.getIsOccupied() == false) {
+			if (!visited.contains(cell) && (cell.getIsOccupied() == false || cell.isRoomCenter())) {
 				visited.add(cell);
-				if (cell.isRoom() == true) {
+				if (cell.getRoom().isRoom() == true) {
 					targets.add(cell);
 					//if the cell is a room, then the path must stop here so it adds cell to targets and doesn't execute recursive function
 				} else if (pathlength == 1) {
@@ -348,8 +362,10 @@ public class Board {
 
 
 	public void calcTargets(BoardCell startCell, int pathlength) {
+		targets = new HashSet<BoardCell>();
 		visited.add(startCell);
 		findAllTargets(startCell, pathlength);
+		visited.remove(startCell);
 	}
 
 	public Set<BoardCell> getTargets() {

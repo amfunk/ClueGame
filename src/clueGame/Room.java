@@ -1,5 +1,7 @@
 package clueGame;
 
+import java.util.Set;
+
 public class Room {
 	private String name;
 	private Character symbol;
@@ -58,7 +60,7 @@ public class Room {
 		this.isWalkway = isWalkway;
 	}
 
-	public boolean isHasSecretPassage() {
+	public boolean hasSecretPassage() {
 		return hasSecretPassage;
 	}
 
