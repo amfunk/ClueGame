@@ -377,19 +377,16 @@ public class Board {
 		return targets;
 	}
 
-	public BoardCell getCell(int row, int col) {
-		BoardCell temp = this.grid[row][col];
-		return temp;
+	public BoardCell getCell(int row, int col) { 
+		return this.grid[row][col];
 	}
 
 	public Room getRoom(char symbol) {
-		Room temp = roomMap.get(symbol);
-		return temp;
+		return roomMap.get(symbol);
 	}
 
 	public Room getRoom(BoardCell cell) {
-		Room temp = cell.getRoom();
-		return temp;
+		return cell.getRoom();
 	}
 
 	public int getNumRows() {

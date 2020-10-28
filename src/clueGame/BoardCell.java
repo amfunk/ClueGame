@@ -20,7 +20,7 @@ public class BoardCell {
 	BoardCell(int row, int col) {
 		this.row = row;
 		this.col = col;
-		adjList = new HashSet<BoardCell>();
+		adjList = new HashSet<>();
 	}
 	
 	public void setIsRoom(boolean isRoom) {
