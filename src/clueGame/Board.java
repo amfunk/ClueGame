@@ -13,7 +13,7 @@ public class Board {
 
 	private BoardCell[][] grid;
 	private Set<BoardCell> targets;
-	private Set<BoardCell> visited = new HashSet<BoardCell>();
+	private Set<BoardCell> visited = new HashSet<>();
 
 	private static Board theInstance = new Board();
 
@@ -26,7 +26,7 @@ public class Board {
 	}
 
 	public void initialize() {
-		roomMap = new HashMap<Character, Room>(); //allocates memory for a new roomMap upon each new call to initialize
+		roomMap = new HashMap<>(); //allocates memory for a new roomMap upon each new call to initialize
 		try {
 			loadConfigFiles();
 		} catch (FileNotFoundException e) {
@@ -114,7 +114,6 @@ public class Board {
 
 		File layoutFile = new File(layoutConfigFile);
 		rowCounter = 0;
-		colCounter = 0;
 		Scanner in = new Scanner(layoutFile);
 		while (in.hasNextLine()) {
 			temp = in.nextLine();
