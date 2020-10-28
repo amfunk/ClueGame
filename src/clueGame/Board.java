@@ -346,9 +346,9 @@ public class Board {
 	public void findAllTargets(BoardCell startCell, int pathlength) {
 		for (BoardCell cell : startCell.adjList) {
 			//only visits space if it hasn't been visited, and if either the space isn't occupied or it is a room
-			if (!visited.contains(cell) && (cell.getIsOccupied() == false || cell.isRoomCenter())) {
+			if (!visited.contains(cell) && (!cell.getIsOccupied() || cell.isRoomCenter())) {
 				visited.add(cell);
-				if (cell.getRoom().isRoom() == true) {
+				if (cell.getRoom().isRoom()) {
 					targets.add(cell);
 					//if the cell is a room, then the path must stop here so it adds cell to targets and doesn't execute recursive function
 				} else if (pathlength == 1) {
@@ -367,7 +367,7 @@ public class Board {
 
 	public void calcTargets(BoardCell startCell, int pathlength) {
 		//allocate memory for targets in calctargets function to prevent targets from carrying over from previous calculations
-		targets = new HashSet<BoardCell>();
+		targets = new HashSet<>();
 		visited.add(startCell);
 		findAllTargets(startCell, pathlength);
 		visited.remove(startCell);
