@@ -102,6 +102,44 @@ public class Board {
 	//
 	//
 	//
+	
+	public void parseRowsCols() throws FileNotFoundException, BadConfigFormatException {
+
+		String temp;
+		int colsPerRow = 0;
+		int rowCounter = 0;
+		int colCounter = 0;
+
+		File layoutFile = new File(layoutConfigFile);
+		//First gets the num rows and cols
+		Scanner in = new Scanner(layoutFile);
+		while (in.hasNextLine()) {
+			temp = in.nextLine();
+			colCounter = 0;
+			for (String val : temp.split(",")) {
+				colCounter++;
+			}
+			//finds size of initial row
+			if (rowCounter == 0) {
+				colsPerRow = colCounter;
+			} else if (colCounter != colsPerRow){ // if any rows don't match the size of initial row, throws exception
+				throw new BadConfigFormatException("Number of columns per row isn't constant");
+			}
+			this.cols = colCounter;
+			rowCounter++;
+		}
+		this.rows = rowCounter;
+		in.close();
+	}
+	
+	public void initializeBoard() {
+		grid = new BoardCell[rows][cols];
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				grid[i][j] = new BoardCell(i, j);
+			}
+		}
+	}
 
 	private void populateBoardCells() throws FileNotFoundException, BadConfigFormatException {
 
@@ -177,49 +215,12 @@ public class Board {
 
 	}
 
-	public void parseRowsCols() throws FileNotFoundException, BadConfigFormatException {
-
-		String temp;
-		int colsPerRow = 0;
-		int rowCounter = 0;
-		int colCounter = 0;
-
-		File layoutFile = new File(layoutConfigFile);
-		//First gets the num rows and cols
-		Scanner in = new Scanner(layoutFile);
-		while (in.hasNextLine()) {
-			temp = in.nextLine();
-			colCounter = 0;
-			for (String val : temp.split(",")) {
-				colCounter++;
-			}
-			//finds size of initial row
-			if (rowCounter == 0) {
-				colsPerRow = colCounter;
-			} else if (colCounter != colsPerRow){ // if any rows don't match the size of initial row, throws exception
-				throw new BadConfigFormatException("Number of columns per row isn't constant");
-			}
-			this.cols = colCounter;
-			rowCounter++;
-		}
-		this.rows = rowCounter;
-		in.close();
-	}
-
-	public void initializeBoard() {
-		grid = new BoardCell[rows][cols];
-		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < cols; j++) {
-				grid[i][j] = new BoardCell(i, j);
-			}
-		}
-	}
-
 	//
 	//
 	//CONTAINS ALL ADJ FUNCTIONS
 	//vvvvvvvvvvvvvvvvvvvvvvvv
 	//
+	
 	public Set<BoardCell> getAdjList(int row, int col) {
 		BoardCell temp = this.getCell(row, col);
 		
