@@ -29,9 +29,7 @@ public class Board {
 		roomMap = new HashMap<>(); //allocates memory for a new roomMap upon each new call to initialize
 		try {
 			loadConfigFiles();
-		} catch (FileNotFoundException e) {
-			System.out.println(e);
-		} catch (BadConfigFormatException e) {
+		} catch (FileNotFoundException | BadConfigFormatException e) {
 			System.out.println(e);
 		}
 	}
