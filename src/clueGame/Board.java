@@ -227,7 +227,7 @@ public class Board {
 		return temp.adjList;
 	}
 	
-	public void intializeAdjLists() {
+	public void intializeAdjLists() throws BadConfigFormatException {
 		for(int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				generateAdjList(i, j);
@@ -235,7 +235,7 @@ public class Board {
 		}
 	}
 	
-	public void generateAdjList(int row, int col) {
+	public void generateAdjList(int row, int col) throws BadConfigFormatException {
 		BoardCell temp = this.getCell(row, col);
 		Room room = temp.getRoom();
 		//differentiates between room and walkway before creating adj list
@@ -302,29 +302,36 @@ public class Board {
 		}
 	}
 
-	public void doorAdj(BoardCell cell) {
+	public void doorAdj(BoardCell cell) throws BadConfigFormatException {
 		//adds the room center to the doorways adjlist depending on the direction of the enum
-		//the last line of each if statement also adds the doorway to the rooms adjlist; this is much simpler than trying to find all doorways for each room center
+		//the last line of each case statement also adds the doorway to the rooms adjlist; this is much simpler than trying to find all doorways for each room center
 		BoardCell test;
-		if (cell.getDoorDirection() == DoorDirection.UP) {
+		switch (cell.getDoorDirection()) {
+		case UP:
 			test = this.getCell(cell.getRow() - 1,cell.getCol());
 			cell.adjList.add(test.getRoom().getCenterCell());
 			test.getRoom().getCenterCell().adjList.add(cell);
-		}
-		if (cell.getDoorDirection() == DoorDirection.DOWN) {
+			break;
+		case DOWN:
 			test = this.getCell(cell.getRow()+1,cell.getCol());
 			cell.adjList.add(test.getRoom().getCenterCell());
 			test.getRoom().getCenterCell().adjList.add(cell);
-		}
-		if (cell.getDoorDirection() == DoorDirection.LEFT) {
+			break;
+		case LEFT:
 			test = this.getCell(cell.getRow(),cell.getCol()-1);
 			cell.adjList.add(test.getRoom().getCenterCell());
 			test.getRoom().getCenterCell().adjList.add(cell);
-		}
-		if (cell.getDoorDirection() == DoorDirection.RIGHT) {
+			break;
+		case RIGHT:
 			test = this.getCell(cell.getRow(),cell.getCol()+1);
 			cell.adjList.add(test.getRoom().getCenterCell());
 			test.getRoom().getCenterCell().adjList.add(cell);
+			break;
+		case NONE:
+			throw new BadConfigFormatException("Doorway at ( " + cell.getRow() + ", " + cell.getCol() + " ) had NONE enum associated with it");
+		default:
+			throw new BadConfigFormatException("Doorway at ( " + cell.getRow() + ", " + cell.getCol() + " ) didn't have any enum associated with it");
+		
 		}
 	}
 
