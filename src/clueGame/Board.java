@@ -49,7 +49,6 @@ public class Board {
 	public void loadSetupConfig() throws FileNotFoundException, BadConfigFormatException {
 		Room room;
 		String temp;
-		char symbol;
 		File setupFile = new File(setupConfigFile);
 		Scanner in = new Scanner(setupFile);
 		while (in.hasNextLine()) {
@@ -63,23 +62,28 @@ public class Board {
 					room.setRoom(false);
 				} else { //since the description must be either Room or Space, throw exception for anything else
 					throw new BadConfigFormatException("Not a recognized cell type");
-				}
-				for (String val : temp.split(",")) {
-					if(val.startsWith(" ")) {
-						//removes space from substring
-						val = val.substring(1, val.length());
-						if(val.length() == 1) {
-							symbol = val.charAt(0); // converts string into char
-							room.setSymbol(symbol);
-						} else {
-							room.setName(val);
-						}
-					}
-				}
-				roomMap.put(room.getSymbol(), room);				
+				}	
+				fillRoomMap(temp, room);
 			}
 		}
 		in.close();
+	}
+	
+	public void fillRoomMap(String temp, Room room) {
+		char symbol;
+		for (String val : temp.split(",")) {
+			if(val.startsWith(" ")) {
+				//removes space from substring
+				val = val.substring(1, val.length());
+				if(val.length() == 1) {
+					symbol = val.charAt(0); // converts string into char
+					room.setSymbol(symbol);
+				} else {
+					room.setName(val);
+				}
+			}
+		}
+		roomMap.put(room.getSymbol(), room);
 	}
 
 	public void loadLayoutConfig() throws FileNotFoundException, BadConfigFormatException {
@@ -253,6 +257,11 @@ public class Board {
 
 	public void walkwayAdj(BoardCell cell) {
 		//only adds cells to adjlist if they are also a walkway to ensure that unused spaces and rooms aren't added		
+		calcRowAdj(cell); //calculates adjacencies in the same row
+		calcColAdj(cell); //calculates adjacencies in the same col
+	}
+	
+	public void calcRowAdj(BoardCell cell) {
 		BoardCell test;
 		//test for row edge cases
 		if (cell.getRow() == 0) { // left edge of board
@@ -276,6 +285,10 @@ public class Board {
 				cell.adjList.add(this.getCell(cell.getRow() - 1, cell.getCol()));
 			}
 		}
+	}
+	
+	public void calcColAdj(BoardCell cell) {
+		BoardCell test;
 		//test for col edge cases
 		if (cell.getCol() == 0) { //top edge of board
 			test = this.getCell(cell.getRow(), cell.getCol()+1);

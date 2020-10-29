@@ -3,7 +3,7 @@ package clueGame;
 import java.util.*;
 
 public class BoardCell {
-	
+
 	private int row;
 	private int col;
 	private char secretPassage;
@@ -14,13 +14,13 @@ public class BoardCell {
 	private boolean isOccupied = false;
 	private boolean isDoorway = false;
 	Set<BoardCell> adjList;
-	
+
 	BoardCell(int row, int col) {
 		this.row = row;
 		this.col = col;
 		adjList = new HashSet<>();
 	}
-	
+
 	public void setOccupied(boolean isOccupied) {
 		if (isOccupied) {
 			this.isOccupied = true;
@@ -28,7 +28,7 @@ public class BoardCell {
 			this.isOccupied = false;
 		}
 	}
-	
+
 	public boolean getIsOccupied() {
 		return this.isOccupied;
 	}
@@ -36,7 +36,7 @@ public class BoardCell {
 	public boolean isDoorway() {
 		return this.isDoorway;
 	}
-	
+
 	public void setIsDoorway(boolean isDoorway) {
 		this.isDoorway = isDoorway;
 	}
@@ -45,14 +45,22 @@ public class BoardCell {
 		return this.isRoomLabel;
 	}
 
+	public void setRoomLabel(boolean isRoomLabel) {
+		this.isRoomLabel = isRoomLabel;
+	}
+
 	public boolean isRoomCenter() {
 		return this.isRoomCenter;
+	}
+
+	public void setRoomCenter(boolean isRoomCenter) {
+		this.isRoomCenter = isRoomCenter;
 	}
 
 	public char getSecretPassage() {
 		return this.secretPassage;
 	}
-	
+
 	public void setSecretPassage(char secretPassage) {
 		this.secretPassage = secretPassage;
 	}
@@ -68,17 +76,9 @@ public class BoardCell {
 	public void setDoorDirection(DoorDirection doorDirection) {
 		this.doorDirection = doorDirection;
 	}
-	
+
 	public DoorDirection getDoorDirection() {
 		return this.doorDirection;
-	}
-
-	public void setRoomLabel(boolean isRoomLabel) {
-			this.isRoomLabel = isRoomLabel;
-	}
-
-	public void setRoomCenter(boolean isRoomCenter) {
-		this.isRoomCenter = isRoomCenter;
 	}
 
 	public int getRow() {
