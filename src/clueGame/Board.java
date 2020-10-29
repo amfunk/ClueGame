@@ -167,14 +167,12 @@ public class Board {
 						throw new BadConfigFormatException("Room on board is not listed under setup file");
 					}
 					cell.setRoom(roomMap.get(symbol));
-					cell.setIsRoom(cell.getRoom().isRoom());
 				} else {
 					cell = getCell(rowCounter,colCounter);
 					//since this cell has more than one character, splits it into the initial symbol and then modifier
 					symbol = val.charAt(0);
 					modifier = val.charAt(1);
 					cell.setRoom(roomMap.get(symbol));
-					cell.setIsRoom(cell.getRoom().isRoom());
 					interpretModifier(cell, modifier); //called to determine the type of board cell
 					if (cell.isDoorway()) {
 						cell.getRoom().setWalkway(true);

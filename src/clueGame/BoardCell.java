@@ -11,28 +11,14 @@ public class BoardCell {
 	private Room room;
 	private boolean isRoomLabel = false;
 	private boolean isRoomCenter = false;
-	private boolean isRoom = false;
 	private boolean isOccupied = false;
 	private boolean isDoorway = false;
-	private boolean isWalkway = false;
 	Set<BoardCell> adjList;
 	
 	BoardCell(int row, int col) {
 		this.row = row;
 		this.col = col;
 		adjList = new HashSet<>();
-	}
-	
-	public void setIsRoom(boolean isRoom) {
-		if (isRoom) {
-			this.isRoom = true;
-		} else {
-			this.isRoom = false;
-		}
-	}
-	
-	public boolean isRoom() {
-		return this.isRoom;
 	}
 	
 	public void setOccupied(boolean isOccupied) {
@@ -101,14 +87,6 @@ public class BoardCell {
 
 	public int getCol() {
 		return col;
-	}
-
-	public boolean isWalkway() {
-		return isWalkway;
-	}
-
-	public void setWalkway(boolean isWalkway) {
-		this.isWalkway = isWalkway;
 	}
 
 }
