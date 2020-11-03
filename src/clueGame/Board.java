@@ -560,4 +560,12 @@ public class Board {
 		this.deck = deck;
 	}
 
+	public Set<Card> getDealtCards() {
+		return dealtCards;
+	}
+
+	public void setDealtCards(Set<Card> dealtCards) {
+		this.dealtCards = dealtCards;
+	}
+
 }

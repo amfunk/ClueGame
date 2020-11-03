@@ -5,8 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Set;
+import java.util.*;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -67,6 +66,24 @@ public class gameSetupTests {
 		assertTrue(theAnswer.person.getType().equals(CardType.PERSON));
 		assertTrue(theAnswer.room.getType().equals(CardType.ROOM));
 		assertTrue(theAnswer.weapon.getType().equals(CardType.WEAPON));
-
+	}
+	
+	@Test
+	public void testDealHand() {
+		List<Player> players = board.getPlayers();
+		List<Card> deck = board.getDeck();
+		Set<Card> dealtCards = board.getDealtCards();
+		List<Card> checkedCards = new ArrayList<>();
+		//makes sure that all players have cards in their hand
+		for (int i = 0; i < players.size(); i++) {
+			assertFalse(players.get(i).getHand().isEmpty());
+			for (int j = 0; j < players.get(i).getHand().size(); j++) {
+				//makes sure that there are no duplicate cards given out
+				assertFalse(checkedCards.contains(players.get(i).getHand().get(j)));
+				checkedCards.add(players.get(i).getHand().get(j));
+			}
+		}
+		//makes sure all cards have been dealt
+		assertTrue(deck.size() == dealtCards.size());
 	}
 }
