@@ -24,7 +24,7 @@ public class gameSetupTests {
 		// Board is singleton, get the only instance
 		board = Board.getInstance();
 		// set the file names to use my config files
-		board.setConfigFiles("data/ClueLayout306.csv", "data/ClueSetup306.txt");		
+		board.setConfigFiles("data/ClueLayout.csv", "data/ClueSetup.txt");		
 		// Initialize will load config files 
 		board.initialize();
 	}
@@ -36,8 +36,8 @@ public class gameSetupTests {
 		// checks the data that was loaded into the edge cases
 		assertTrue(players.get(0).getName().equals("Colonel Mustard"));
 		assertTrue(players.get(0).getColor().equals(Color.yellow));
-		assertTrue(players.get(6).getName().equals("Mrs. Peacock"));
-		assertTrue(players.get(6).getColor().equals(Color.blue));
+		assertTrue(players.get(5).getName().equals("Mrs. Peacock"));
+		assertTrue(players.get(5).getColor().equals(Color.blue));
 	}
 	
 	

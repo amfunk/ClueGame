@@ -6,7 +6,8 @@ public abstract class Player {
 
 	private String name;
 	private Color color;
-	protected int row, column;
+	protected int row;
+	protected int column;
 	private Card[] hand;
 	
 	public boolean equals(Player target) {

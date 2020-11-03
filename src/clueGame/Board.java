@@ -1,6 +1,7 @@
 package clueGame;
 
 import java.util.*;
+import java.awt.Color;
 import java.io.*;
 
 public class Board {
@@ -52,6 +53,11 @@ public class Board {
 		Room room;
 		String temp;
 		Card card;
+		String name = null;
+		Color color = null;
+		int row = 0;
+		int column = 0;
+		Player player = null;
 		this.deck = new ArrayList<>();
 		this.players = new ArrayList<>();
 		File setupFile = new File(setupConfigFile);
@@ -66,6 +72,57 @@ public class Board {
 						card.setType(CardType.ROOM);
 					} else if (temp.startsWith("Player")) {
 						card.setType(CardType.PERSON);
+						int counter = 0;
+						for (String val : temp.split(",")) {
+							if(val.startsWith(" ")) {
+								//removes space from substring
+								val = val.substring(1, val.length());
+								switch (counter) {
+								case 0:
+									name = val;
+									break;
+								case 1:
+									if (val.equals("Yellow")) {
+										color = Color.yellow;
+									} else if (val.equals("Green")) {
+										color = Color.green;
+									} else if (val.equals("Blue")) {
+										color = Color.blue;
+									} else if (val.equals("Red")) {
+										color = Color.red;
+									} else if (val.equals("Purple")) {
+										color = Color.magenta;
+									} else if (val.equals("White")) {
+										color = Color.white;
+									}
+									break;
+								case 2:
+									if (val.equals("Human")) {
+										player = new HumanPlayer();
+									} else if (val.equals("Computer")) {
+										player = new ComputerPlayer();
+									}
+									break;
+								case 3:
+									int counter2 = 0;
+									for (String coordinate : val.split("-")) {
+										if (counter2 == 0) {
+											row = Integer.parseInt(coordinate);
+										} else if (counter2 == 1) {
+											column = Integer.parseInt(coordinate);
+										}
+										counter2++;
+									}
+									break;
+								}
+								counter++;
+							}
+						}
+						player.setName(name);
+						player.setColor(color);
+						player.row = row;
+						player.column = column;
+						this.players.add(player);
 					} else if (temp.startsWith("Weapon")) {
 						card.setType(CardType.WEAPON);
 					} else {
