@@ -13,6 +13,7 @@ public class Board {
 	private Map<Character, Room> roomMap;
 
 	private ArrayList<Card> deck;
+	private Set<Card> dealtCards = new HashSet<>();
 	private ArrayList<Player> players;
 	private Solution theAnswer = Solution.getAnswer();
 
@@ -92,7 +93,9 @@ public class Board {
 			}
 		}
 		in.close();
-		dealCards();
+		if(!players.isEmpty()) {
+			dealCards();
+		}
 	}
 	
 	public void setCardName(Card card, String temp) {
@@ -189,7 +192,27 @@ public class Board {
 	}
 	
 	public void dealCards() {
-		
+		Random num = new Random();
+		int index;
+		Card card;
+		do {
+			index = num.nextInt(this.deck.size());
+			card = deck.get(index);
+		} while (!card.getType().equals(CardType.PERSON) || this.dealtCards.contains(card));
+		theAnswer.person = card;
+		dealtCards.add(card);
+		do {
+			index = num.nextInt(this.deck.size());
+			card = deck.get(index);
+		} while (!card.getType().equals(CardType.ROOM) || this.dealtCards.contains(card));
+		theAnswer.room = card;
+		dealtCards.add(card);
+		do {
+			index = num.nextInt(this.deck.size());
+			card = deck.get(index);
+		} while (!card.getType().equals(CardType.WEAPON) || this.dealtCards.contains(card));
+		theAnswer.weapon = card;
+		dealtCards.add(card);
 	}
 
 	public void loadLayoutConfig() throws FileNotFoundException, BadConfigFormatException {
