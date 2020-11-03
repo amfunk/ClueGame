@@ -44,7 +44,7 @@ public class gameSetupTests {
 	
 	@Test
 	public void testLoadDeck() {
-		ArrayList<Card> deck = board.getDeck();
+		List<Card> deck = board.getDeck();
 		assertEquals(20, deck.size());
 		assertTrue(deck.get(0).getCardName().equals("Locker Room"));
 		assertTrue(deck.get(0).getType().equals(CardType.ROOM));

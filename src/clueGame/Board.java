@@ -12,7 +12,10 @@ public class Board {
 	private String setupConfigFile;
 	private Map<Character, Room> roomMap;
 
-	private ArrayList<Card> deck;
+	private Random num = new Random();
+
+	private List<Card> deck;
+	private List<Card> shuffleDeck = new ArrayList<>();
 	private Set<Card> dealtCards = new HashSet<>();
 	private ArrayList<Player> players;
 	private Solution theAnswer = Solution.getAnswer();
@@ -192,7 +195,6 @@ public class Board {
 	}
 	
 	public void dealCards() {
-		Random num = new Random();
 		int index;
 		Card card;
 		do {
@@ -213,6 +215,22 @@ public class Board {
 		} while (!card.getType().equals(CardType.WEAPON) || this.dealtCards.contains(card));
 		theAnswer.weapon = card;
 		dealtCards.add(card);
+		int counter = 0;
+		for (int i = 0; i < deck.size(); i++) {
+			shuffleDeck.add(deck.get(i));
+		}
+		Collections.shuffle(shuffleDeck); // shuffles the deck
+		while (dealtCards.size() < deck.size()) {
+			for (int i = 0; i < players.size(); i++) {
+				if (dealtCards.size() >= deck.size()) {
+					break;
+				}
+				card = deck.get(counter);
+				players.get(i).updateHand(card);
+				dealtCards.add(card);
+				counter++;
+			}
+		}
 	}
 
 	public void loadLayoutConfig() throws FileNotFoundException, BadConfigFormatException {
@@ -552,7 +570,7 @@ public class Board {
 		this.players = players;
 	}
 
-	public ArrayList<Card> getDeck() {
+	public List<Card> getDeck() {
 		return deck;
 	}
 
