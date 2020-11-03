@@ -2,7 +2,7 @@ package clueGame;
 
 public class Card {
 	
-	private CardType type;
+	private CardType type = CardType.NONE;
 	private String cardName;
 	
 	public boolean equals(Card target) {

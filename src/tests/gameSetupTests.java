@@ -16,6 +16,7 @@ import clueGame.BoardCell;
 import clueGame.Card;
 import clueGame.CardType;
 import clueGame.Player;
+import clueGame.Solution;
 
 public class gameSetupTests {
 	
@@ -58,7 +59,14 @@ public class gameSetupTests {
 		assertTrue(deck.get(14).getType().equals(CardType.WEAPON));
 		assertTrue(deck.get(19).getCardName().equals("Poleax"));
 		assertTrue(deck.get(19).getType().equals(CardType.WEAPON));
-
 	}
 	
+	@Test
+	public void testTheAnswer() {
+		Solution theAnswer = Solution.getAnswer();
+		assertTrue(theAnswer.person.getType().equals(CardType.PERSON));
+		assertTrue(theAnswer.room.getType().equals(CardType.ROOM));
+		assertTrue(theAnswer.weapon.getType().equals(CardType.WEAPON));
+
+	}
 }

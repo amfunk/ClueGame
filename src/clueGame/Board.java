@@ -92,6 +92,7 @@ public class Board {
 			}
 		}
 		in.close();
+		dealCards();
 	}
 	
 	public void setCardName(Card card, String temp) {
@@ -185,6 +186,10 @@ public class Board {
 			}
 		}
 		roomMap.put(room.getSymbol(), room);
+	}
+	
+	public void dealCards() {
+		
 	}
 
 	public void loadLayoutConfig() throws FileNotFoundException, BadConfigFormatException {
