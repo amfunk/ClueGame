@@ -11,6 +11,10 @@ public class Board {
 	private String setupConfigFile;
 	private Map<Character, Room> roomMap;
 
+	private ArrayList<Card> deck;
+	private ArrayList<Player> players;
+	private Solution theAnswer = Solution.getAnswer();
+
 	private BoardCell[][] grid;
 	private Set<BoardCell> targets;
 	private Set<BoardCell> visited = new HashSet<>();
@@ -47,26 +51,44 @@ public class Board {
 	public void loadSetupConfig() throws FileNotFoundException, BadConfigFormatException {
 		Room room;
 		String temp;
+		Card card;
+		this.deck = new ArrayList<>();
+		this.players = new ArrayList<>();
 		File setupFile = new File(setupConfigFile);
 		Scanner in = new Scanner(setupFile);
 		while (in.hasNextLine()) {
 			temp = in.nextLine();
 			//ignores any commented lines
 			if (!temp.startsWith("//")) {
-				room = new Room(); //allocates new memory for each room that must be added to roomMap
-				if(temp.startsWith("Room")) {
-					room.setRoom(true);
-				} else if (temp.startsWith("Space")) {
-					room.setRoom(false);
-				} else { //since the description must be either Room or Space, throw exception for anything else
-					throw new BadConfigFormatException("Not a recognized cell type");
-				}	
-				fillRoomMap(temp, room);
+				if (!temp.startsWith("Space")) {
+					card = new Card();
+					if (temp.startsWith("Room")) {
+						card.setType(CardType.ROOM);
+					} else if (temp.startsWith("Player")) {
+						card.setType(CardType.PERSON);
+					} else if (temp.startsWith("Weapon")) {
+						card.setType(CardType.WEAPON);
+					} else {
+						throw new BadConfigFormatException("Not a recognized data type");
+					}
+					this.deck.add(card);
+				}
+				if (temp.startsWith("Room") || temp.startsWith("Space")) {
+					room = new Room(); //allocates new memory for each room that must be added to roomMap
+					if(temp.startsWith("Room")) {
+						room.setRoom(true);
+					} else if (temp.startsWith("Space")) {
+						room.setRoom(false);
+					} else { //since the description must be either Room or Space, throw exception for anything else
+						throw new BadConfigFormatException("Not a recognized cell type");
+					}	
+					fillRoomMap(temp, room);
+				}
 			}
 		}
 		in.close();
 	}
-	
+
 	public void fillRoomMap(String temp, Room room) {
 		char symbol;
 		for (String val : temp.split(",")) {
@@ -94,7 +116,7 @@ public class Board {
 
 		//populates the board with the values from the layout file
 		populateBoardCells();
-		
+
 		//generates adjacency lists for all boardcells that can be targets
 		intializeAdjLists();
 	}
@@ -104,7 +126,7 @@ public class Board {
 	//
 	//
 	//
-	
+
 	public void parseRowsCols() throws FileNotFoundException, BadConfigFormatException {
 
 		String temp;
@@ -133,7 +155,7 @@ public class Board {
 		this.rows = rowCounter;
 		in.close();
 	}
-	
+
 	public void initializeBoard() {
 		grid = new BoardCell[rows][cols];
 		for (int i = 0; i < rows; i++) {
@@ -220,13 +242,13 @@ public class Board {
 	//CONTAINS ALL ADJ FUNCTIONS
 	//vvvvvvvvvvvvvvvvvvvvvvvv
 	//
-	
+
 	public Set<BoardCell> getAdjList(int row, int col) {
 		BoardCell temp = this.getCell(row, col);
-		
+
 		return temp.adjList;
 	}
-	
+
 	public void intializeAdjLists() throws BadConfigFormatException {
 		for(int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
@@ -234,7 +256,7 @@ public class Board {
 			}
 		}
 	}
-	
+
 	public void generateAdjList(int row, int col) throws BadConfigFormatException {
 		BoardCell temp = this.getCell(row, col);
 		Room room = temp.getRoom();
@@ -250,7 +272,7 @@ public class Board {
 			}
 			walkwayAdj(temp);
 		}
-		
+
 	}
 
 	public void walkwayAdj(BoardCell cell) {
@@ -258,7 +280,7 @@ public class Board {
 		calcRowAdj(cell); //calculates adjacencies in the same row
 		calcColAdj(cell); //calculates adjacencies in the same col
 	}
-	
+
 	public void calcRowAdj(BoardCell cell) {
 		BoardCell test;
 		//test for row edge cases
@@ -284,7 +306,7 @@ public class Board {
 			}
 		}
 	}
-	
+
 	public void calcColAdj(BoardCell cell) {
 		BoardCell test;
 		//test for col edge cases
@@ -340,7 +362,7 @@ public class Board {
 			throw new BadConfigFormatException("Doorway at ( " + cell.getRow() + ", " + cell.getCol() + " ) had NONE enum associated with it");
 		default:
 			throw new BadConfigFormatException("Doorway at ( " + cell.getRow() + ", " + cell.getCol() + " ) didn't have any enum associated with it");
-		
+
 		}
 	}
 
@@ -411,6 +433,22 @@ public class Board {
 
 	public int getNumCols() {
 		return this.cols;
+	}
+
+	public ArrayList<Player> getPlayers() {
+		return players;
+	}
+
+	public void setPlayers(ArrayList<Player> players) {
+		this.players = players;
+	}
+
+	public ArrayList<Card> getDeck() {
+		return deck;
+	}
+
+	public void setDeck(ArrayList<Card> deck) {
+		this.deck = deck;
 	}
 
 }

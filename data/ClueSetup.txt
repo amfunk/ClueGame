@@ -10,3 +10,17 @@ Room, Wine Cellar, W
 // Extra spaces
 Space, Unused, X
 Space, Hallway, H
+// Players
+Player, Colonel Mustard, Yellow, Human, 6-0
+Player, Professor Plum, Purple, Computer, 0-9
+Player, Mr. Green, Green, Computer, 17-0
+Player, Mrs. White, White, Computer, 25-17
+Player, Miss Scarlet, Red, Computer, 18-25
+Player, Mrs. Peacock, Blue, Computer, 8-25
+// Weapons
+Weapon, Knife
+Weapon, Poison
+Weapon, Crowbar
+Weapon, Icepick
+Weapon, Handgun
+Weapon, Poleax
