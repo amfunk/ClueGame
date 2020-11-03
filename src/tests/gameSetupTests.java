@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 
 import clueGame.Board;
 import clueGame.BoardCell;
+import clueGame.Card;
+import clueGame.CardType;
 import clueGame.Player;
 
 public class gameSetupTests {
@@ -40,6 +42,23 @@ public class gameSetupTests {
 		assertTrue(players.get(5).getColor().equals(Color.blue));
 	}
 	
-	
+	@Test
+	public void testLoadDeck() {
+		ArrayList<Card> deck = board.getDeck();
+		assertEquals(20, deck.size());
+		assertTrue(deck.get(0).getCardName().equals("Locker Room"));
+		assertTrue(deck.get(0).getType().equals(CardType.ROOM));
+		assertTrue(deck.get(7).getCardName().equals("Wine Cellar"));
+		assertTrue(deck.get(7).getType().equals(CardType.ROOM));
+		assertTrue(deck.get(8).getCardName().equals("Colonel Mustard"));
+		assertTrue(deck.get(8).getType().equals(CardType.PERSON));
+		assertTrue(deck.get(13).getCardName().equals("Mrs. Peacock"));
+		assertTrue(deck.get(13).getType().equals(CardType.PERSON));
+		assertTrue(deck.get(14).getCardName().equals("Knife"));
+		assertTrue(deck.get(14).getType().equals(CardType.WEAPON));
+		assertTrue(deck.get(19).getCardName().equals("Poleax"));
+		assertTrue(deck.get(19).getType().equals(CardType.WEAPON));
+
+	}
 	
 }

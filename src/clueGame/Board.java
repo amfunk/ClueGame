@@ -53,11 +53,6 @@ public class Board {
 		Room room;
 		String temp;
 		Card card;
-		String name = null;
-		Color color = null;
-		int row = 0;
-		int column = 0;
-		Player player = null;
 		this.deck = new ArrayList<>();
 		this.players = new ArrayList<>();
 		File setupFile = new File(setupConfigFile);
@@ -67,68 +62,18 @@ public class Board {
 			//ignores any commented lines
 			if (!temp.startsWith("//")) {
 				if (!temp.startsWith("Space")) {
-					card = new Card();
+					//card = new Card();
 					if (temp.startsWith("Room")) {
-						card.setType(CardType.ROOM);
+						//card.setType(CardType.ROOM);
 					} else if (temp.startsWith("Player")) {
-						card.setType(CardType.PERSON);
-						int counter = 0;
-						for (String val : temp.split(",")) {
-							if(val.startsWith(" ")) {
-								//removes space from substring
-								val = val.substring(1, val.length());
-								switch (counter) {
-								case 0:
-									name = val;
-									break;
-								case 1:
-									if (val.equals("Yellow")) {
-										color = Color.yellow;
-									} else if (val.equals("Green")) {
-										color = Color.green;
-									} else if (val.equals("Blue")) {
-										color = Color.blue;
-									} else if (val.equals("Red")) {
-										color = Color.red;
-									} else if (val.equals("Purple")) {
-										color = Color.magenta;
-									} else if (val.equals("White")) {
-										color = Color.white;
-									}
-									break;
-								case 2:
-									if (val.equals("Human")) {
-										player = new HumanPlayer();
-									} else if (val.equals("Computer")) {
-										player = new ComputerPlayer();
-									}
-									break;
-								case 3:
-									int counter2 = 0;
-									for (String coordinate : val.split("-")) {
-										if (counter2 == 0) {
-											row = Integer.parseInt(coordinate);
-										} else if (counter2 == 1) {
-											column = Integer.parseInt(coordinate);
-										}
-										counter2++;
-									}
-									break;
-								}
-								counter++;
-							}
-						}
-						player.setName(name);
-						player.setColor(color);
-						player.row = row;
-						player.column = column;
-						this.players.add(player);
+						//card.setType(CardType.PERSON);
+						loadPlayers(players, temp);
 					} else if (temp.startsWith("Weapon")) {
-						card.setType(CardType.WEAPON);
+						//card.setType(CardType.WEAPON);
 					} else {
 						throw new BadConfigFormatException("Not a recognized data type");
 					}
-					this.deck.add(card);
+					//this.deck.add(card);
 				}
 				if (temp.startsWith("Room") || temp.startsWith("Space")) {
 					room = new Room(); //allocates new memory for each room that must be added to roomMap
@@ -144,6 +89,68 @@ public class Board {
 			}
 		}
 		in.close();
+	}
+
+	public void loadPlayers(List<Player> players, String temp) throws BadConfigFormatException {
+		String name = null;
+		Color color = null;
+		int row = 0;
+		int column = 0;
+		Player player = null;
+
+		int counter = 0;
+		for (String val : temp.split(",")) {
+			if(val.startsWith(" ")) {
+				//removes space from substring and ignores Player
+				val = val.substring(1, val.length());
+				switch (counter) {
+				case 0:
+					name = val;
+					break;
+				case 1:
+					if (val.equals("Yellow")) {
+						color = Color.yellow;
+					} else if (val.equals("Green")) {
+						color = Color.green;
+					} else if (val.equals("Blue")) {
+						color = Color.blue;
+					} else if (val.equals("Red")) {
+						color = Color.red;
+					} else if (val.equals("Purple")) {
+						color = Color.magenta;
+					} else if (val.equals("White")) {
+						color = Color.white;
+					}
+					break;
+				case 2:
+					if (val.equals("Human")) {
+						player = new HumanPlayer();
+					} else if (val.equals("Computer")) {
+						player = new ComputerPlayer();
+					}
+					break;
+				case 3:
+					int counter2 = 0;
+					for (String coordinate : val.split("-")) {
+						if (counter2 == 0) {
+							row = Integer.parseInt(coordinate);
+						} else if (counter2 == 1) {
+							column = Integer.parseInt(coordinate);
+						}
+						counter2++;
+					}
+					break;
+				default:
+					throw new BadConfigFormatException("Default case in loadPlayers should not be reached");
+				}
+				counter++;
+			}
+		}
+		player.setName(name);
+		player.setColor(color);
+		player.row = row;
+		player.column = column;
+		this.players.add(player);
 	}
 
 	public void fillRoomMap(String temp, Room room) {
