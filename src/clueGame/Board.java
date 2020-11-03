@@ -62,18 +62,21 @@ public class Board {
 			//ignores any commented lines
 			if (!temp.startsWith("//")) {
 				if (!temp.startsWith("Space")) {
-					//card = new Card();
+					card = new Card();
 					if (temp.startsWith("Room")) {
-						//card.setType(CardType.ROOM);
+						card.setType(CardType.ROOM);
+						setCardName(card, temp);
 					} else if (temp.startsWith("Player")) {
-						//card.setType(CardType.PERSON);
+						card.setType(CardType.PERSON);
+						setCardName(card, temp);
 						loadPlayers(players, temp);
 					} else if (temp.startsWith("Weapon")) {
-						//card.setType(CardType.WEAPON);
+						card.setType(CardType.WEAPON);
+						setCardName(card, temp);
 					} else {
 						throw new BadConfigFormatException("Not a recognized data type");
 					}
-					//this.deck.add(card);
+					this.deck.add(card);
 				}
 				if (temp.startsWith("Room") || temp.startsWith("Space")) {
 					room = new Room(); //allocates new memory for each room that must be added to roomMap
@@ -89,6 +92,20 @@ public class Board {
 			}
 		}
 		in.close();
+	}
+	
+	public void setCardName(Card card, String temp) {
+		int counter = 0;
+		for (String val : temp.split(",")) {
+			if(val.startsWith(" ")) {
+				//removes space from substring and ignores Category
+				val = val.substring(1, val.length());
+			}
+			if (counter == 1) {
+				card.setCardName(val);
+			}
+			counter++;
+		}
 	}
 
 	public void loadPlayers(List<Player> players, String temp) throws BadConfigFormatException {
