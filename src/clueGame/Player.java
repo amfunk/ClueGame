@@ -11,7 +11,7 @@ public abstract class Player {
 	protected int column;
 	private List<Card> hand = new ArrayList<>();
 	private List<Card> seenCards = new ArrayList<>();
-	
+
 	public boolean equals(Player target) {
 		if (target.getName().equals(this.name) && target.getColor().equals(this.color)) {
 			return true;
@@ -19,15 +19,33 @@ public abstract class Player {
 			return false;
 		}
 	}
-	
+
 	public Card disproveSuggestion(Solution suggestion) {
-		return new Card();
+		List<Card> matchCards = new ArrayList<>();
+		for(int i = 0; i < hand.size(); i++) {
+			if (suggestion.person.equals(hand.get(i))) {
+				matchCards.add(hand.get(i));
+			}
+			if (suggestion.weapon.equals(hand.get(i))) {
+				matchCards.add(hand.get(i));
+			}
+			if (suggestion.room.equals(hand.get(i))) {
+				matchCards.add(hand.get(i));
+			}
+		}
+		// will always return first index so long as the list isn't empty. Shuffles the list first to pseudo-randomly select a card
+		if(!matchCards.isEmpty()) {
+			Collections.shuffle(matchCards);
+			return matchCards.get(0);
+		} else {
+			return null;
+		}
 	}
-	
+
 	public void updateHand(Card card) {
 		this.hand.add(card);
 	}
-	
+
 	public void updateSeenCards(Card seenCard) {
 		this.seenCards.add(seenCard);
 	}
