@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.*;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -94,8 +96,8 @@ public class GameSolutionTest {
 		room.setCardName("Bathroom");
 		suggestion.room = room;
 		
+		//adds cards to the players hand
 		player.updateHand(person);
-		
 		person = new Card();
 		person.setType(CardType.PERSON);
 		person.setCardName("Professor Plum");
@@ -111,5 +113,26 @@ public class GameSolutionTest {
 		
 		// disproveSuggestion() should return the Colonel Mustard card
 		assertEquals(suggestion.person, player.disproveSuggestion(suggestion));
+		
+		//changes suggestion so that it doens't match any cards in the players hand
+		person = new Card();
+		person.setType(CardType.PERSON);
+		person.setCardName("Mrs. Peacock");
+		suggestion.person = person;
+		
+		// should return null since no cards match suggestion
+		assertEquals(null, player.disproveSuggestion(suggestion));
+		
+		//adds two cards from suggestion to player hand
+		player.updateHand(suggestion.person);
+		player.updateHand(suggestion.room);
+		
+		Set<Card> matchCards = new HashSet<>();
+		while (matchCards.size() < 2) {
+			matchCards.add(player.disproveSuggestion(suggestion));
+		}
+		// set should contain both cards
+		assertTrue(matchCards.contains(suggestion.person));
+		assertTrue(matchCards.contains(suggestion.room));
 	}
 }
