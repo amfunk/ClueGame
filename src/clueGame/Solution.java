@@ -7,7 +7,7 @@ public class Solution {
 	
 	private static Solution theAnswer = new Solution();
 	
-	private Solution() {
+	public Solution() {
 		
 	}
 	

@@ -10,6 +10,7 @@ public abstract class Player {
 	protected int row;
 	protected int column;
 	private List<Card> hand = new ArrayList<>();
+	private List<Card> seenCards = new ArrayList<>();
 	
 	public boolean equals(Player target) {
 		if (target.getName().equals(this.name) && target.getColor().equals(this.color)) {
@@ -19,8 +20,24 @@ public abstract class Player {
 		}
 	}
 	
+	public Card disproveSuggestion() {
+		return new Card();
+	}
+	
 	public void updateHand(Card card) {
 		this.hand.add(card);
+	}
+	
+	public void updateSeenCards(Card seenCard) {
+		this.seenCards.add(seenCard);
+	}
+
+	public List<Card> getSeenCards() {
+		return seenCards;
+	}
+
+	public void setSeenCards(List<Card> seenCards) {
+		this.seenCards = seenCards;
 	}
 
 	public String getName() {

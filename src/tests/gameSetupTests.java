@@ -76,6 +76,8 @@ public class gameSetupTests {
 		List<Card> checkedCards = new ArrayList<>();
 		//makes sure that all players have cards in their hand
 		for (int i = 0; i < players.size(); i++) {
+			System.out.println(players.get(i).getName());
+			System.out.println(players.get(i).getHand().get(0).getCardName());
 			assertFalse(players.get(i).getHand().isEmpty());
 			for (int j = 0; j < players.get(i).getHand().size(); j++) {
 				//makes sure that there are no duplicate cards given out

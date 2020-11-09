@@ -15,8 +15,8 @@ public class Board {
 	private Random num = new Random();
 
 	private List<Card> deck;
-	private List<Card> shuffleDeck = new ArrayList<>();
-	private Set<Card> dealtCards = new HashSet<>();
+	private List<Card> shuffleDeck;
+	private Set<Card> dealtCards;
 	private ArrayList<Player> players;
 	private Solution theAnswer = Solution.getAnswer();
 
@@ -73,7 +73,7 @@ public class Board {
 					} else if (temp.startsWith("Player")) {
 						card.setType(CardType.PERSON);
 						setCardName(card, temp);
-						loadPlayers(players, temp);
+						loadPlayers(temp);
 					} else if (temp.startsWith("Weapon")) {
 						card.setType(CardType.WEAPON);
 						setCardName(card, temp);
@@ -115,7 +115,7 @@ public class Board {
 		}
 	}
 
-	public void loadPlayers(List<Player> players, String temp) throws BadConfigFormatException {
+	public void loadPlayers(String temp) throws BadConfigFormatException {
 		String name = null;
 		Color color = null;
 		int row = 0;
@@ -197,6 +197,8 @@ public class Board {
 	public void dealCards() {
 		int index;
 		Card card;
+		dealtCards = new HashSet<>();
+		shuffleDeck = new ArrayList<>();
 		do {
 			index = num.nextInt(this.deck.size());
 			card = deck.get(index);
@@ -507,6 +509,14 @@ public class Board {
 	//END OF ADJACENCY FUNCTIONS
 	//
 	//
+	
+	public boolean checkAccusation() {
+		return false;
+	}
+	
+	public Card handleSuggestion() {
+		return new Card();
+	}
 
 	public void findAllTargets(BoardCell startCell, int pathlength) {
 		for (BoardCell cell : startCell.adjList) {
