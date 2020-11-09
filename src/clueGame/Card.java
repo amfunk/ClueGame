@@ -6,7 +6,7 @@ public class Card {
 	private String cardName;
 	
 	public boolean equals(Card target) {
-		return false;
+		return (this.type.equals(target.type) && this.cardName.equals(target.cardName));
 	}
 
 	public CardType getType() {

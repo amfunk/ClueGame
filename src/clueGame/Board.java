@@ -510,8 +510,9 @@ public class Board {
 	//
 	//
 	
-	public boolean checkAccusation() {
-		return false;
+	public boolean checkAccusation(Solution suggestion) {
+		Solution answer = Solution.getAnswer();
+		return answer.equals(suggestion);
 	}
 	
 	public Card handleSuggestion() {

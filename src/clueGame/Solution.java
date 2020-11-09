@@ -14,4 +14,12 @@ public class Solution {
 	public static Solution getAnswer() {
 		return theAnswer;
 	}
+	
+	public boolean equals(Solution solution) {
+		if (this.person.equals(solution.person) && this.room.equals(solution.room) && this.weapon.equals(solution.weapon)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
