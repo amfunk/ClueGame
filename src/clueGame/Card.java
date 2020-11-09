@@ -5,6 +5,10 @@ public class Card {
 	private CardType type = CardType.NONE;
 	private String cardName;
 	
+	public String toString() {
+		return "Name: " + cardName + ", Type: " + type;
+	}
+	
 	public boolean equals(Card target) {
 		return (this.type.equals(target.type) && this.cardName.equals(target.cardName));
 	}

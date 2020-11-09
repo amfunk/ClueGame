@@ -20,7 +20,7 @@ public abstract class Player {
 		}
 	}
 	
-	public Card disproveSuggestion() {
+	public Card disproveSuggestion(Solution suggestion) {
 		return new Card();
 	}
 	
