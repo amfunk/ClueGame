@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import clueGame.Board;
 import clueGame.Card;
 import clueGame.CardType;
+import clueGame.ComputerPlayer;
 import clueGame.HumanPlayer;
 import clueGame.Player;
 import clueGame.Solution;
@@ -19,6 +20,18 @@ import clueGame.Solution;
 public class GameSolutionTest {
 	
 	private static Board board;
+	private static Card mustardCard = new Card("Colonel Mustard", CardType.PERSON);
+	private static Card plumCard = new Card("Professor Plum", CardType.PERSON);
+	private static Card whiteCard = new Card("Mrs. White", CardType.PERSON);
+	private static Card scarletCard = new Card("Miss Scarlet", CardType.PERSON);
+	private static Card knifeCard = new Card("Knife", CardType.WEAPON);
+	private static Card poisonCard = new Card("Poison", CardType.WEAPON);
+	private static Card icepickCard = new Card("Icepick", CardType.WEAPON);
+	private static Card handgunCard = new Card("Handgun", CardType.WEAPON);
+	private static Card bathroomCard = new Card("Bathroom", CardType.ROOM);
+	private static Card gymCard = new Card("Gym", CardType.ROOM);
+	private static Card armoryCard = new Card("Armory", CardType.ROOM);
+	private static Card wineCard = new Card("Wine Cellar", CardType.ROOM);
 
 	@BeforeAll
 	public static void setUp() {
@@ -134,5 +147,45 @@ public class GameSolutionTest {
 		// set should contain both cards
 		assertTrue(matchCards.contains(suggestion.person));
 		assertTrue(matchCards.contains(suggestion.room));
+	}
+	
+	@Test
+	public void testHandleSuggestion() {
+		Player player1 = new HumanPlayer();
+		Player player2 = new ComputerPlayer();
+		Player player3 = new ComputerPlayer();
+		Player player4 = new ComputerPlayer();
+		
+		Solution suggestion = new Solution();
+		suggestion.person = whiteCard;
+		suggestion.weapon = handgunCard;
+		suggestion.room = bathroomCard;
+		
+		List<Player> playerList = new ArrayList<>();
+		playerList.add(player1);
+		playerList.add(player2);
+		playerList.add(player3);
+		playerList.add(player4);
+
+		player1.updateHand(mustardCard);
+		player1.updateHand(knifeCard);
+		player2.updateHand(plumCard);
+		player2.updateHand(poisonCard);
+		player2.updateHand(gymCard);
+		player3.updateHand(icepickCard);
+		player3.updateHand(armoryCard);
+		player4.updateHand(scarletCard);
+		player4.updateHand(wineCard);
+
+		//no players can disprove this
+		assertEquals(null, board.handleSuggestion(suggestion, playerList, player1));
+		
+		player3.updateHand(whiteCard);
+		//only player3 can disprove this because they have the Mrs. White card; should still return null
+		assertEquals(null, board.handleSuggestion(suggestion, playerList, player3));
+		
+		player4.updateHand(handgunCard);
+		//although player 3 and player 4 can disprove this, it should return player 3s card, Mrs. White
+		assertEquals(whiteCard, board.handleSuggestion(suggestion, playerList, player1));
 	}
 }

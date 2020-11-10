@@ -515,7 +515,7 @@ public class Board {
 		return answer.equals(suggestion);
 	}
 	
-	public Card handleSuggestion() {
+	public Card handleSuggestion(Solution suggestion, List<Player> playerList, Player accuser) {
 		return new Card();
 	}
 

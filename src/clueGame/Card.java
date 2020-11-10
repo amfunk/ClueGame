@@ -2,8 +2,17 @@ package clueGame;
 
 public class Card {
 	
-	private CardType type = CardType.NONE;
+	private CardType type;
 	private String cardName;
+	
+	public Card () {
+		type = CardType.NONE;
+	}
+	
+	public Card (String cardName, CardType type) {
+		this.cardName = cardName;
+		this.type = type;
+	}
 	
 	public String toString() {
 		return "Name: " + cardName + ", Type: " + type;
