@@ -144,7 +144,7 @@ public class GameSolutionTest {
 		while (matchCards.size() < 2) {
 			matchCards.add(player.disproveSuggestion(suggestion));
 		}
-		// set should contain both cards
+		// set should contain both cards because it randomly chooses one each time it runs
 		assertTrue(matchCards.contains(suggestion.person));
 		assertTrue(matchCards.contains(suggestion.room));
 	}
@@ -178,15 +178,25 @@ public class GameSolutionTest {
 		player4.updateHand(scarletCard);
 		player4.updateHand(wineCard);
 
-		//no players can disprove this
+		//no players can disprove this, returns null
 		assertEquals(null, board.handleSuggestion(suggestion, player1));
 		
+		List<Card> hand = new ArrayList<>();
+		for(Card card : player1.getHand()) {
+			hand.add(card);
+		}
+		player1.updateHand(bathroomCard);
+		//since only the human player can disprove this, it should return the bathroom card
+		assertEquals(bathroomCard, board.handleSuggestion(suggestion, player4));
+		//resets player1 hand to remove bathroomCard
+		player1.setHand(hand);
+
 		player3.updateHand(whiteCard);
 		//only player3 can disprove this because they have the Mrs. White card; should still return null
 		assertEquals(null, board.handleSuggestion(suggestion, player3));
 		
 		player4.updateHand(handgunCard);
-		//although player 3 and player 4 can disprove this, it should return player 3s card, Mrs. White
+		//although player3 and player4 can disprove this, it should return player3s card, Mrs. White
 		assertEquals(whiteCard, board.handleSuggestion(suggestion, player1));
 	}
 }

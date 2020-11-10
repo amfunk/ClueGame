@@ -11,6 +11,7 @@ public abstract class Player {
 	protected int column;
 	private List<Card> hand = new ArrayList<>();
 	private List<Card> seenCards = new ArrayList<>();
+	private List<Room> seenRooms = new ArrayList<>();
 
 	public boolean equals(Player target) {
 		if (target.getName().equals(this.name) && target.getColor().equals(this.color)) {
@@ -101,4 +102,12 @@ public abstract class Player {
 	public abstract Solution createSuggestion();
 
 	public abstract BoardCell selectTargets();
+
+	public List<Room> getSeenRooms() {
+		return seenRooms;
+	}
+
+	public void setSeenRooms(List<Room> seenRooms) {
+		this.seenRooms = seenRooms;
+	}
 }

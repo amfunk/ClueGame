@@ -19,6 +19,7 @@ public class BoardCell {
 		this.row = row;
 		this.col = col;
 		adjList = new HashSet<>();
+		isOccupied = false;
 	}
 
 	public void setOccupied(boolean isOccupied) {
