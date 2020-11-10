@@ -166,6 +166,7 @@ public class GameSolutionTest {
 		playerList.add(player2);
 		playerList.add(player3);
 		playerList.add(player4);
+		board.setPlayers(playerList);
 
 		player1.updateHand(mustardCard);
 		player1.updateHand(knifeCard);
@@ -178,14 +179,14 @@ public class GameSolutionTest {
 		player4.updateHand(wineCard);
 
 		//no players can disprove this
-		assertEquals(null, board.handleSuggestion(suggestion, playerList, player1));
+		assertEquals(null, board.handleSuggestion(suggestion, player1));
 		
 		player3.updateHand(whiteCard);
 		//only player3 can disprove this because they have the Mrs. White card; should still return null
-		assertEquals(null, board.handleSuggestion(suggestion, playerList, player3));
+		assertEquals(null, board.handleSuggestion(suggestion, player3));
 		
 		player4.updateHand(handgunCard);
 		//although player 3 and player 4 can disprove this, it should return player 3s card, Mrs. White
-		assertEquals(whiteCard, board.handleSuggestion(suggestion, playerList, player1));
+		assertEquals(whiteCard, board.handleSuggestion(suggestion, player1));
 	}
 }

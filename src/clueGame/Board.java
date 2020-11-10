@@ -17,7 +17,7 @@ public class Board {
 	private List<Card> deck;
 	private List<Card> shuffleDeck;
 	private Set<Card> dealtCards;
-	private ArrayList<Player> players;
+	private List<Player> players;
 	private Solution theAnswer = Solution.getAnswer();
 
 	private BoardCell[][] grid;
@@ -515,17 +515,17 @@ public class Board {
 		return answer.equals(suggestion);
 	}
 	
-	public Card handleSuggestion(Solution suggestion, List<Player> playerList, Player accuser) {
-		for (int i = 0; i < playerList.size(); i++) {
-			if (!(playerList.get(i) == accuser)) {
-				if (playerList.get(i).getHand().contains(suggestion.person)) {
-					return playerList.get(i).getHand().get(playerList.get(i).getHand().indexOf(suggestion.person));
+	public Card handleSuggestion(Solution suggestion, Player accuser) {
+		for (int i = 0; i < players.size(); i++) {
+			if ((players.get(i) != accuser)) {
+				if (players.get(i).getHand().contains(suggestion.person)) {
+					return players.get(i).getHand().get(players.get(i).getHand().indexOf(suggestion.person));
 				}
-				if (playerList.get(i).getHand().contains(suggestion.weapon)) {
-					return playerList.get(i).getHand().get(playerList.get(i).getHand().indexOf(suggestion.weapon));
+				if (players.get(i).getHand().contains(suggestion.weapon)) {
+					return players.get(i).getHand().get(players.get(i).getHand().indexOf(suggestion.weapon));
 				}
-				if (playerList.get(i).getHand().contains(suggestion.room)) {
-					return playerList.get(i).getHand().get(playerList.get(i).getHand().indexOf(suggestion.room));
+				if (players.get(i).getHand().contains(suggestion.room)) {
+					return players.get(i).getHand().get(players.get(i).getHand().indexOf(suggestion.room));
 				}
 			}
 		}
@@ -586,11 +586,11 @@ public class Board {
 		return this.cols;
 	}
 
-	public ArrayList<Player> getPlayers() {
+	public List<Player> getPlayers() {
 		return players;
 	}
 
-	public void setPlayers(ArrayList<Player> players) {
+	public void setPlayers(List<Player> players) {
 		this.players = players;
 	}
 

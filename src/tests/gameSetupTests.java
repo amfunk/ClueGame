@@ -33,7 +33,7 @@ public class gameSetupTests {
 	
 	@Test
 	public void testLoadPlayers() {
-		ArrayList<Player> players = board.getPlayers();
+		List<Player> players = board.getPlayers();
 		assertEquals(6, players.size());	// make sure that 6 players are loaded in
 		// checks the data that was loaded into the edge cases
 		assertTrue(players.get(0).getName().equals("Colonel Mustard"));
