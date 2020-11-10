@@ -516,7 +516,20 @@ public class Board {
 	}
 	
 	public Card handleSuggestion(Solution suggestion, List<Player> playerList, Player accuser) {
-		return new Card();
+		for (int i = 0; i < playerList.size(); i++) {
+			if (!(playerList.get(i) == accuser)) {
+				if (playerList.get(i).getHand().contains(suggestion.person)) {
+					return playerList.get(i).getHand().get(playerList.get(i).getHand().indexOf(suggestion.person));
+				}
+				if (playerList.get(i).getHand().contains(suggestion.weapon)) {
+					return playerList.get(i).getHand().get(playerList.get(i).getHand().indexOf(suggestion.weapon));
+				}
+				if (playerList.get(i).getHand().contains(suggestion.room)) {
+					return playerList.get(i).getHand().get(playerList.get(i).getHand().indexOf(suggestion.room));
+				}
+			}
+		}
+		return null;
 	}
 
 	public void findAllTargets(BoardCell startCell, int pathlength) {
