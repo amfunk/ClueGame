@@ -598,7 +598,7 @@ public class Board {
 		return deck;
 	}
 
-	public void setDeck(ArrayList<Card> deck) {
+	public void setDeck(List<Card> deck) {
 		this.deck = deck;
 	}
 

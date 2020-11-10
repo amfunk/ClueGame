@@ -1,6 +1,8 @@
 package clueGame;
 
 public class ComputerPlayer extends Player {
+	
+	@Override
 	public Solution createSuggestion() {
 		return new Solution();
 		

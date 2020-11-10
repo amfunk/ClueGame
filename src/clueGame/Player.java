@@ -81,4 +81,6 @@ public abstract class Player {
 	public void setHand(List<Card> hand) {
 		this.hand = hand;
 	}
+
+	public abstract Solution createSuggestion();
 }
