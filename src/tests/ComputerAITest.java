@@ -43,6 +43,10 @@ public class ComputerAITest {
 		List<Card> deck = new ArrayList<>();
 		List<Card> hand = new ArrayList<>();
 		List<Card> seenCards = new ArrayList<>();
+		
+		//sets player location to the armory
+		player.setRow(14);
+		player.setColumn(21);
 
 		deck.add(mustardCard);
 		deck.add(plumCard);
@@ -72,10 +76,11 @@ public class ComputerAITest {
 		assertFalse(player.getSeenCards().contains(player.createSuggestion().person));
 		assertFalse(player.getHand().contains(player.createSuggestion().person));
 
-		assertTrue(board.getDeck().contains(player.createSuggestion().person));
+		assertTrue(board.getDeck().contains(player.createSuggestion().weapon));
 		assertFalse(player.getSeenCards().contains(player.createSuggestion().weapon));
 		assertFalse(player.getHand().contains(player.createSuggestion().weapon));
-
+		
+		assertTrue(player.createSuggestion().room.equals(armoryCard));
 
 	}
 }
