@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import clueGame.Board;
+import clueGame.BoardCell;
 import clueGame.Card;
 import clueGame.CardType;
 import clueGame.ComputerPlayer;
@@ -82,5 +83,22 @@ public class ComputerAITest {
 		
 		assertTrue(player.createSuggestion().room.equals(armoryCard));
 
+	}
+	
+	@Test
+	public void testSelectTargets() {
+		Player player = new ComputerPlayer();
+		BoardCell start;
+		player.setRow(8);
+		player.setColumn(23);
+		start = board.getCell(8, 23);
+		board.calcTargets(start, 5);
+		//makes sure that it always picks one of two rooms available
+		assertTrue(board.getCell(3, 22).equals(player.selectTargets()) || board.getCell(14, 21).equals(player.selectTargets()));
+		assertTrue(board.getAdjList(8, 23).contains(player.selectTargets()));
+
+		//makes sure that when a room isn't available it picks a boardcell from adjlist
+		board.calcTargets(start, 3);
+		assertTrue(board.getAdjList(8, 23).contains(player.selectTargets()));
 	}
 }

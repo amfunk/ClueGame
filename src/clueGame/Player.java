@@ -99,4 +99,6 @@ public abstract class Player {
 	}
 
 	public abstract Solution createSuggestion();
+
+	public abstract BoardCell selectTargets();
 }
