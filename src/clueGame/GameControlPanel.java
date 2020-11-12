@@ -1,5 +1,8 @@
 package clueGame;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.JButton;
@@ -7,11 +10,15 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 
 public class GameControlPanel extends JPanel{
 	
 	private JTextField turnField = new JTextField();
 	private JTextField rollField = new JTextField();
+	private JTextField guess = new JTextField();
+	private JTextField guessResult = new JTextField();
 	
 	GameControlPanel() {
 		setLayout(new GridLayout(2, 0));
@@ -21,9 +28,12 @@ public class GameControlPanel extends JPanel{
 		JPanel turnPanel = new JPanel();
 		turnPanel.setLayout(new GridLayout(2,1));
 		turnPanel.add(new JLabel("Whose turn?"));
+		turnField.setEditable(false);
 		turnPanel.add(turnField);
 		JPanel rollPanel = new JPanel();
-		rollPanel.add(new JLabel("Roll:"));
+		rollPanel.add(new JLabel("Roll: "));
+		rollField.setEditable(false);
+		rollField.setPreferredSize(new Dimension(40, 20));
 		rollPanel.add(rollField);
 		JButton accuseButton = new JButton("Make Accusation");
 		JButton nextButton = new JButton("NEXT!");
@@ -35,6 +45,18 @@ public class GameControlPanel extends JPanel{
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new GridLayout(0, 2));
 		add(bottomPanel);
+		JPanel guessPanel = new JPanel();
+		guessPanel.setLayout(new GridLayout(1, 0));
+		guessPanel.setBorder(new TitledBorder(new EtchedBorder(), "Guess"));
+		guess.setEditable(false);
+		guessPanel.add(guess);
+		JPanel resultPanel = new JPanel();
+		resultPanel.setLayout(new GridLayout(1, 0));
+		resultPanel.setBorder(new TitledBorder(new EtchedBorder(), "Guess Result"));
+		guessResult.setEditable(false);
+		resultPanel.add(guessResult);
+		bottomPanel.add(guessPanel);
+		bottomPanel.add(resultPanel);
 	}
 	
 	public static void main(String[] args) {
@@ -52,22 +74,22 @@ public class GameControlPanel extends JPanel{
 	}
 	
 	private void setGuessResult(String guessResult) {
-		// TODO Auto-generated method stub
-		
+		this.guessResult.setText(guessResult);
 	}
 
 	private void setGuess(String guess) {
-		// TODO Auto-generated method stub
-		
+		this.guess.setText(guess);
 	}
 
 	private void setTurn(Player player, int roll) {
-		setRollField(Integer.toString(roll));
-		setTurnField(player.getName());
+		String newRoll = Integer.toString(roll);
+		setRollField(newRoll);
+		setTurnField(player.getName(), player.getColor());
 	}
 
-	public void setTurnField(String turnField) {
+	public void setTurnField(String turnField, Color color) {
 		this.turnField.setText(turnField);
+		this.turnField.setBackground(color);
 	}
 
 	public void setRollField(String rollField) {
