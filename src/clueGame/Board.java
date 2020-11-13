@@ -149,8 +149,10 @@ public class Board {
 				case 2:
 					if (val.equals("Human")) {
 						player = new HumanPlayer();
+						player.setHuman(true);
 					} else if (val.equals("Computer")) {
 						player = new ComputerPlayer();
+						player.setHuman(false);
 					}
 					break;
 				case 3:

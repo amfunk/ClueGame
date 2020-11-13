@@ -12,6 +12,7 @@ public abstract class Player {
 	private List<Card> hand = new ArrayList<>();
 	private List<Card> seenCards = new ArrayList<>();
 	private List<Room> seenRooms = new ArrayList<>();
+	private boolean isHuman;
 
 	public boolean equals(Player target) {
 		if (target.getName().equals(this.name) && target.getColor().equals(this.color)) {
@@ -109,5 +110,13 @@ public abstract class Player {
 
 	public void setSeenRooms(List<Room> seenRooms) {
 		this.seenRooms = seenRooms;
+	}
+
+	public boolean isHuman() {
+		return isHuman;
+	}
+
+	public void setHuman(boolean isHuman) {
+		this.isHuman = isHuman;
 	}
 }
