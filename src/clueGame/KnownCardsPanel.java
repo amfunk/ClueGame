@@ -19,6 +19,7 @@ public class KnownCardsPanel extends JPanel {
 		//sets people section
 		JPanel people = new JPanel();
 		people.setLayout(new GridLayout(0, 1));
+		people.setBorder(new TitledBorder(new EtchedBorder(), "People"));
 		JLabel peopleHand = new JLabel("In Hand:");
 		people.add(peopleHand);
 		for (int i = 0; i < player.getHand().size(); i++) {
@@ -35,6 +36,7 @@ public class KnownCardsPanel extends JPanel {
 		//sets room section
 		JPanel rooms = new JPanel();
 		rooms.setLayout(new GridLayout(0, 1));
+		rooms.setBorder(new TitledBorder(new EtchedBorder(), "Rooms"));
 		JLabel roomsHand = new JLabel("In Hand:");
 		rooms.add(roomsHand);
 		for (int i = 0; i < player.getHand().size(); i++) {
@@ -51,6 +53,7 @@ public class KnownCardsPanel extends JPanel {
 		//sets weapon section
 		JPanel weapons = new JPanel();
 		weapons.setLayout(new GridLayout(0, 1));
+		weapons.setBorder(new TitledBorder(new EtchedBorder(), "Weapons"));
 		JLabel weaponsHand = new JLabel("In Hand:");
 		weapons.add(weaponsHand);
 		for (int i = 0; i < player.getHand().size(); i++) {
