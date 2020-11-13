@@ -224,12 +224,12 @@ public class Board {
 			shuffleDeck.add(deck.get(i));
 		}
 		Collections.shuffle(shuffleDeck); // shuffles the deck
-		while (dealtCards.size() < deck.size()) {
+		while (dealtCards.size() < shuffleDeck.size()) {
 			for (int i = 0; i < players.size(); i++) {
-				if (dealtCards.size() >= deck.size()) {
+				if (dealtCards.size() >= shuffleDeck.size()) {
 					break;
 				}
-				card = deck.get(counter);
+				card = shuffleDeck.get(counter);
 				players.get(i).updateHand(card);
 				dealtCards.add(card);
 				counter++;

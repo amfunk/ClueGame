@@ -1,5 +1,6 @@
 package clueGame;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class KnownCardsPanel extends JPanel {
 	KnownCardsPanel(Player player) {
 		setLayout(new GridLayout(3, 0));
 		setBorder(new TitledBorder(new EtchedBorder(), "Known Cards"));
+		int counter = 0;
 		
 		//sets people section
 		JPanel people = new JPanel();
@@ -22,12 +24,21 @@ public class KnownCardsPanel extends JPanel {
 		people.setBorder(new TitledBorder(new EtchedBorder(), "People"));
 		JLabel peopleHand = new JLabel("In Hand:");
 		people.add(peopleHand);
+		counter = 0;
 		for (int i = 0; i < player.getHand().size(); i++) {
 			if (player.getHand().get(i).getType().equals(CardType.PERSON)) {
 				JTextField temp = new JTextField(player.getHand().get(i).getCardName());
 				temp.setEditable(false);
 				people.add(temp);
+				temp.setBackground(Color.white);
+				counter++;
 			}
+		}
+		if (counter == 0) {
+			JTextField temp = new JTextField("None");
+			temp.setEditable(false);
+			temp.setBackground(Color.white);
+			people.add(temp);
 		}
 		JLabel peopleSeen = new JLabel("Seen:");
 		people.add(peopleSeen);
@@ -39,12 +50,21 @@ public class KnownCardsPanel extends JPanel {
 		rooms.setBorder(new TitledBorder(new EtchedBorder(), "Rooms"));
 		JLabel roomsHand = new JLabel("In Hand:");
 		rooms.add(roomsHand);
+		counter = 0;
 		for (int i = 0; i < player.getHand().size(); i++) {
 			if (player.getHand().get(i).getType().equals(CardType.ROOM)) {
 				JTextField temp = new JTextField(player.getHand().get(i).getCardName());
 				temp.setEditable(false);
 				rooms.add(temp);
+				temp.setBackground(Color.white);
+				counter++;
 			}
+		}
+		if (counter == 0) {
+			JTextField temp = new JTextField("None");
+			temp.setEditable(false);
+			temp.setBackground(Color.white);
+			rooms.add(temp);
 		}
 		JLabel roomsSeen = new JLabel("Seen:");
 		rooms.add(roomsSeen);
@@ -56,12 +76,21 @@ public class KnownCardsPanel extends JPanel {
 		weapons.setBorder(new TitledBorder(new EtchedBorder(), "Weapons"));
 		JLabel weaponsHand = new JLabel("In Hand:");
 		weapons.add(weaponsHand);
+		counter = 0;
 		for (int i = 0; i < player.getHand().size(); i++) {
 			if (player.getHand().get(i).getType().equals(CardType.WEAPON)) {
 				JTextField temp = new JTextField(player.getHand().get(i).getCardName());
 				temp.setEditable(false);
+				temp.setBackground(Color.white);
 				weapons.add(temp);
+				counter++;
 			}
+		}
+		if (counter == 0) {
+			JTextField temp = new JTextField("None");
+			temp.setEditable(false);
+			temp.setBackground(Color.white);
+			weapons.add(temp);
 		}
 		JLabel weaponsSeen = new JLabel("Seen:");
 		weapons.add(weaponsSeen);
