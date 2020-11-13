@@ -2,7 +2,9 @@ package clueGame;
 
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -25,6 +27,7 @@ public class KnownCardsPanel extends JPanel {
 		JLabel peopleHand = new JLabel("In Hand:");
 		people.add(peopleHand);
 		counter = 0;
+		//sets people for cards in hand
 		for (int i = 0; i < player.getHand().size(); i++) {
 			if (player.getHand().get(i).getType().equals(CardType.PERSON)) {
 				JTextField temp = new JTextField(player.getHand().get(i).getCardName());
@@ -42,6 +45,23 @@ public class KnownCardsPanel extends JPanel {
 		}
 		JLabel peopleSeen = new JLabel("Seen:");
 		people.add(peopleSeen);
+		counter = 0;
+		//sets people for seen cards
+		for (int i = 0; i < player.getSeenCards().size(); i++) {
+			if (player.getSeenCards().get(i).getType().equals(CardType.PERSON)) {
+				JTextField temp = new JTextField(player.getSeenCards().get(i).getCardName());
+				temp.setEditable(false);
+				people.add(temp);
+				temp.setBackground(player.getSeenCards().get(i).getOwner().getColor());
+				counter++;
+			}
+		}
+		if (counter == 0) {
+			JTextField temp = new JTextField("None");
+			temp.setEditable(false);
+			temp.setBackground(Color.white);
+			people.add(temp);
+		}
 		add(people);
 		
 		//sets room section
@@ -51,6 +71,7 @@ public class KnownCardsPanel extends JPanel {
 		JLabel roomsHand = new JLabel("In Hand:");
 		rooms.add(roomsHand);
 		counter = 0;
+		//sets rooms for cards in hand
 		for (int i = 0; i < player.getHand().size(); i++) {
 			if (player.getHand().get(i).getType().equals(CardType.ROOM)) {
 				JTextField temp = new JTextField(player.getHand().get(i).getCardName());
@@ -68,6 +89,23 @@ public class KnownCardsPanel extends JPanel {
 		}
 		JLabel roomsSeen = new JLabel("Seen:");
 		rooms.add(roomsSeen);
+		counter = 0;
+		//sets rooms for cards that have been seen
+		for (int i = 0; i < player.getSeenCards().size(); i++) {
+			if (player.getSeenCards().get(i).getType().equals(CardType.ROOM)) {
+				JTextField temp = new JTextField(player.getSeenCards().get(i).getCardName());
+				temp.setEditable(false);
+				rooms.add(temp);
+				temp.setBackground(player.getSeenCards().get(i).getOwner().getColor());
+				counter++;
+			}
+		}
+		if (counter == 0) {
+			JTextField temp = new JTextField("None");
+			temp.setEditable(false);
+			temp.setBackground(Color.white);
+			rooms.add(temp);
+		}
 		add(rooms);
 		
 		//sets weapon section
@@ -77,6 +115,7 @@ public class KnownCardsPanel extends JPanel {
 		JLabel weaponsHand = new JLabel("In Hand:");
 		weapons.add(weaponsHand);
 		counter = 0;
+		//sets weapons for cards in hand
 		for (int i = 0; i < player.getHand().size(); i++) {
 			if (player.getHand().get(i).getType().equals(CardType.WEAPON)) {
 				JTextField temp = new JTextField(player.getHand().get(i).getCardName());
@@ -94,6 +133,23 @@ public class KnownCardsPanel extends JPanel {
 		}
 		JLabel weaponsSeen = new JLabel("Seen:");
 		weapons.add(weaponsSeen);
+		counter = 0;
+		//sets weapons for cards that have been seen
+		for (int i = 0; i < player.getSeenCards().size(); i++) {
+			if (player.getSeenCards().get(i).getType().equals(CardType.WEAPON)) {
+				JTextField temp = new JTextField(player.getSeenCards().get(i).getCardName());
+				temp.setEditable(false);
+				weapons.add(temp);
+				temp.setBackground(player.getSeenCards().get(i).getOwner().getColor());
+				counter++;
+			}
+		}
+		if (counter == 0) {
+			JTextField temp = new JTextField("None");
+			temp.setEditable(false);
+			temp.setBackground(Color.white);
+			weapons.add(temp);
+		}
 		add(weapons);
 	}
 	
@@ -102,12 +158,19 @@ public class KnownCardsPanel extends JPanel {
 		board.setConfigFiles("data/ClueLayout.csv", "data/ClueSetup.txt");		
 		board.initialize();
 		List<Player> players = board.getPlayers();
+		List<Card> seenCards = new ArrayList<>();
 		Player human = null;
+		Random num = new Random();
+		int index = 0;
 		for (Player player : players) {
 			if (player.isHuman()) {
 				human = player;
+			} else { //picks a card from each computer players hand to add to the humans list of seen cards for testing
+				index = num.nextInt(player.getHand().size());
+				seenCards.add(player.getHand().get(index));
 			}
 		}
+		human.setSeenCards(seenCards);
 		KnownCardsPanel panel = new KnownCardsPanel(human);  // create the panel
         JFrame frame = new JFrame();  // create the frame
         frame.setContentPane(panel); // put the panel in the frame

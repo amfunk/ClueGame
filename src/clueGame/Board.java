@@ -137,7 +137,7 @@ public class Board {
 					} else if (val.equals("Green")) {
 						color = Color.green;
 					} else if (val.equals("Blue")) {
-						color = Color.blue;
+						color = Color.cyan;
 					} else if (val.equals("Red")) {
 						color = Color.red;
 					} else if (val.equals("Purple")) {
@@ -230,6 +230,7 @@ public class Board {
 					break;
 				}
 				card = shuffleDeck.get(counter);
+				card.setOwner(players.get(i));
 				players.get(i).updateHand(card);
 				dealtCards.add(card);
 				counter++;

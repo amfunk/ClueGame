@@ -17,7 +17,7 @@ public HumanPlayer() {
 		} else if (color.equals("Green")) {
 			this.setColor(Color.green);
 		} else if (color.equals("Blue")) {
-			this.setColor(Color.blue);
+			this.setColor(Color.cyan);
 		} else if (color.equals("Red")) {
 			this.setColor(Color.red);
 		} else if (color.equals("Purple")) {

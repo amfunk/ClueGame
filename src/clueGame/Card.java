@@ -4,6 +4,7 @@ public class Card {
 	
 	private CardType type;
 	private String cardName;
+	private Player owner;
 	
 	public Card () {
 		type = CardType.NONE;
@@ -36,5 +37,13 @@ public class Card {
 
 	public void setCardName(String cardName) {
 		this.cardName = cardName;
+	}
+
+	public Player getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Player owner) {
+		this.owner = owner;
 	}
 }
