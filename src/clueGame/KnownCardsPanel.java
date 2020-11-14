@@ -26,42 +26,12 @@ public class KnownCardsPanel extends JPanel {
 		people.setBorder(new TitledBorder(new EtchedBorder(), "People"));
 		JLabel peopleHand = new JLabel("In Hand:");
 		people.add(peopleHand);
-		counter = 0;
-		//sets people for cards in hand
-		for (int i = 0; i < player.getHand().size(); i++) {
-			if (player.getHand().get(i).getType().equals(CardType.PERSON)) {
-				JTextField temp = new JTextField(player.getHand().get(i).getCardName());
-				temp.setEditable(false);
-				people.add(temp);
-				temp.setBackground(Color.white);
-				counter++;
-			}
-		}
-		if (counter == 0) {
-			JTextField temp = new JTextField("None");
-			temp.setEditable(false);
-			temp.setBackground(Color.white);
-			people.add(temp);
-		}
+		displayInHand(player, people, CardType.PERSON);
+		
 		JLabel peopleSeen = new JLabel("Seen:");
 		people.add(peopleSeen);
-		counter = 0;
-		//sets people for seen cards
-		for (int i = 0; i < player.getSeenCards().size(); i++) {
-			if (player.getSeenCards().get(i).getType().equals(CardType.PERSON)) {
-				JTextField temp = new JTextField(player.getSeenCards().get(i).getCardName());
-				temp.setEditable(false);
-				people.add(temp);
-				temp.setBackground(player.getSeenCards().get(i).getOwner().getColor());
-				counter++;
-			}
-		}
-		if (counter == 0) {
-			JTextField temp = new JTextField("None");
-			temp.setEditable(false);
-			temp.setBackground(Color.white);
-			people.add(temp);
-		}
+		displaySeen(player, people, CardType.PERSON);
+		
 		add(people);
 		
 		//sets room section
@@ -70,42 +40,12 @@ public class KnownCardsPanel extends JPanel {
 		rooms.setBorder(new TitledBorder(new EtchedBorder(), "Rooms"));
 		JLabel roomsHand = new JLabel("In Hand:");
 		rooms.add(roomsHand);
-		counter = 0;
-		//sets rooms for cards in hand
-		for (int i = 0; i < player.getHand().size(); i++) {
-			if (player.getHand().get(i).getType().equals(CardType.ROOM)) {
-				JTextField temp = new JTextField(player.getHand().get(i).getCardName());
-				temp.setEditable(false);
-				rooms.add(temp);
-				temp.setBackground(Color.white);
-				counter++;
-			}
-		}
-		if (counter == 0) {
-			JTextField temp = new JTextField("None");
-			temp.setEditable(false);
-			temp.setBackground(Color.white);
-			rooms.add(temp);
-		}
+		displayInHand(player, rooms, CardType.ROOM);
+		
 		JLabel roomsSeen = new JLabel("Seen:");
 		rooms.add(roomsSeen);
-		counter = 0;
-		//sets rooms for cards that have been seen
-		for (int i = 0; i < player.getSeenCards().size(); i++) {
-			if (player.getSeenCards().get(i).getType().equals(CardType.ROOM)) {
-				JTextField temp = new JTextField(player.getSeenCards().get(i).getCardName());
-				temp.setEditable(false);
-				rooms.add(temp);
-				temp.setBackground(player.getSeenCards().get(i).getOwner().getColor());
-				counter++;
-			}
-		}
-		if (counter == 0) {
-			JTextField temp = new JTextField("None");
-			temp.setEditable(false);
-			temp.setBackground(Color.white);
-			rooms.add(temp);
-		}
+		displaySeen(player, rooms, CardType.ROOM);
+
 		add(rooms);
 		
 		//sets weapon section
@@ -114,42 +54,12 @@ public class KnownCardsPanel extends JPanel {
 		weapons.setBorder(new TitledBorder(new EtchedBorder(), "Weapons"));
 		JLabel weaponsHand = new JLabel("In Hand:");
 		weapons.add(weaponsHand);
-		counter = 0;
-		//sets weapons for cards in hand
-		for (int i = 0; i < player.getHand().size(); i++) {
-			if (player.getHand().get(i).getType().equals(CardType.WEAPON)) {
-				JTextField temp = new JTextField(player.getHand().get(i).getCardName());
-				temp.setEditable(false);
-				temp.setBackground(Color.white);
-				weapons.add(temp);
-				counter++;
-			}
-		}
-		if (counter == 0) {
-			JTextField temp = new JTextField("None");
-			temp.setEditable(false);
-			temp.setBackground(Color.white);
-			weapons.add(temp);
-		}
+		displayInHand(player, weapons, CardType.WEAPON);
+		
 		JLabel weaponsSeen = new JLabel("Seen:");
 		weapons.add(weaponsSeen);
-		counter = 0;
-		//sets weapons for cards that have been seen
-		for (int i = 0; i < player.getSeenCards().size(); i++) {
-			if (player.getSeenCards().get(i).getType().equals(CardType.WEAPON)) {
-				JTextField temp = new JTextField(player.getSeenCards().get(i).getCardName());
-				temp.setEditable(false);
-				weapons.add(temp);
-				temp.setBackground(player.getSeenCards().get(i).getOwner().getColor());
-				counter++;
-			}
-		}
-		if (counter == 0) {
-			JTextField temp = new JTextField("None");
-			temp.setEditable(false);
-			temp.setBackground(Color.white);
-			weapons.add(temp);
-		}
+		displaySeen(player, weapons, CardType.WEAPON);
+
 		add(weapons);
 	}
 	
@@ -177,6 +87,46 @@ public class KnownCardsPanel extends JPanel {
         frame.setSize(180, 750);  // size the frame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // allow it to close
         frame.setVisible(true); // make it visible
+	}
+	
+	private void displayInHand(Player player, JPanel panel, CardType type) {
+		int counter = 0;
+		//sets people for cards in hand
+		for (int i = 0; i < player.getHand().size(); i++) {
+			if (player.getHand().get(i).getType().equals(type)) {
+				JTextField temp = new JTextField(player.getHand().get(i).getCardName());
+				temp.setEditable(false);
+				panel.add(temp);
+				temp.setBackground(Color.white);
+				counter++;
+			}
+		}
+		if (counter == 0) {
+			JTextField temp = new JTextField("None");
+			temp.setEditable(false);
+			temp.setBackground(Color.white);
+			panel.add(temp);
+		}
+	}
+	
+	private void displaySeen(Player player, JPanel panel, CardType type) {
+		int counter = 0;
+		//sets people for seen cards
+		for (int i = 0; i < player.getSeenCards().size(); i++) {
+			if (player.getSeenCards().get(i).getType().equals(type)) {
+				JTextField temp = new JTextField(player.getSeenCards().get(i).getCardName());
+				temp.setEditable(false);
+				panel.add(temp);
+				temp.setBackground(player.getSeenCards().get(i).getOwner().getColor());
+				counter++;
+			}
+		}
+		if (counter == 0) {
+			JTextField temp = new JTextField("None");
+			temp.setEditable(false);
+			temp.setBackground(Color.white);
+			panel.add(temp);
+		}
 	}
 	
 }
