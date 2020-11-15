@@ -29,7 +29,7 @@ public class Board extends JPanel {
 	private BoardCell[][] grid;
 	private Set<BoardCell> targets;
 	private Set<BoardCell> visited = new HashSet<>();
-	
+
 	private int frameHeight;
 	private int frameWidth;
 
@@ -109,7 +109,7 @@ public class Board extends JPanel {
 			dealCards();
 		}
 	}
-	
+
 	public void setCardName(Card card, String temp) {
 		int counter = 0;
 		for (String val : temp.split(",")) {
@@ -204,7 +204,7 @@ public class Board extends JPanel {
 		}
 		roomMap.put(room.getSymbol(), room);
 	}
-	
+
 	public void dealCards() {
 		int index;
 		Card card;
@@ -521,12 +521,12 @@ public class Board extends JPanel {
 	//END OF ADJACENCY FUNCTIONS
 	//
 	//
-	
+
 	public boolean checkAccusation(Solution suggestion) {
 		Solution answer = Solution.getAnswer();
 		return answer.equals(suggestion);
 	}
-	
+
 	public Card handleSuggestion(Solution suggestion, Player accuser) {
 		for (int i = 0; i < players.size(); i++) {
 			if ((players.get(i) != accuser)) {
@@ -573,7 +573,7 @@ public class Board extends JPanel {
 		findAllTargets(startCell, pathlength);
 		visited.remove(startCell);
 	}
-	
+
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -588,10 +588,26 @@ public class Board extends JPanel {
 				cell = this.getCell(i, j);
 				cell.draw(g, cellSize, xOffset, yOffset);
 				xOffset = xOffset + cellWidth;
-				}
+			}
 			yOffset = yOffset + cellHeight;
 			xOffset = cellWidth/2;
+		}
+		xOffset = cellWidth/2;
+		yOffset = cellHeight/2;
+		for (int i = 0; i < this.rows; i++) {
+			for (int j = 0; j < this.cols; j++) {
+				cell = this.getCell(i, j);
+				if (cell.isDoorway() || cell.isLabel()) {
+					cell.drawDoorLabel(g, cellSize, xOffset, yOffset);
+				}
+				xOffset = xOffset + cellWidth;
 			}
+			yOffset = yOffset + cellHeight;
+			xOffset = cellWidth/2;
+		}
+		for (Player player : this.getPlayers()) {
+			player.draw(g, cellSize);
+		}
 	}
 
 	public Set<BoardCell> getTargets() {

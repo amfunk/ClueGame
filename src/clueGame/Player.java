@@ -1,6 +1,8 @@
 package clueGame;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.util.*;
 
 public abstract class Player {
@@ -20,6 +22,15 @@ public abstract class Player {
 		} else {
 			return false;
 		}
+	}
+	
+	public void draw(Graphics g, Dimension cellSize) {
+		int width = cellSize.width;
+		int height = cellSize.height;
+		int x = width * this.row + width/2;
+		int y = height * this.column + height/2;
+		g.setColor(this.color);
+		g.fillOval(x, y, width, height);
 	}
 
 	public Card disproveSuggestion(Solution suggestion) {

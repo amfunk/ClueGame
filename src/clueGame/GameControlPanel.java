@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
@@ -29,7 +30,7 @@ public class GameControlPanel extends JPanel{
 		turnPanel.setLayout(new GridLayout(2,1));
 		turnPanel.add(new JLabel("Whose turn?"));
 		turnField.setEditable(false);
-		turnPanel.add(turnField);
+		turnPanel.add(turnField, SwingConstants.NORTH);
 		JPanel rollPanel = new JPanel();
 		rollPanel.add(new JLabel("Roll: "));
 		rollField.setEditable(false);
