@@ -1,10 +1,16 @@
 package clueGame;
 
 import java.util.*;
+
+import javax.swing.JPanel;
+
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Graphics;
 import java.io.*;
 
-public class Board {
+public class Board extends JPanel {
 
 	private int rows;
 	private int cols;
@@ -23,6 +29,9 @@ public class Board {
 	private BoardCell[][] grid;
 	private Set<BoardCell> targets;
 	private Set<BoardCell> visited = new HashSet<>();
+	
+	private int frameHeight;
+	private int frameWidth;
 
 	private static Board theInstance = new Board();
 
@@ -564,6 +573,26 @@ public class Board {
 		findAllTargets(startCell, pathlength);
 		visited.remove(startCell);
 	}
+	
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		BoardCell cell;
+		int cellHeight = getHeight() / (this.rows+1);
+		int cellWidth = getWidth() / (this.cols+1);
+		int xOffset = cellWidth/2;
+		int yOffset = cellHeight/2;
+		Dimension cellSize = new Dimension(cellWidth, cellHeight);
+		for (int i = 0; i < this.rows; i++) {
+			for (int j = 0; j < this.cols; j++) {
+				cell = this.getCell(i, j);
+				cell.draw(g, cellSize, xOffset, yOffset);
+				xOffset = xOffset + cellWidth;
+				}
+			yOffset = yOffset + cellHeight;
+			xOffset = cellWidth/2;
+			}
+	}
 
 	public Set<BoardCell> getTargets() {
 		return targets;
@@ -611,6 +640,22 @@ public class Board {
 
 	public void setDealtCards(Set<Card> dealtCards) {
 		this.dealtCards = dealtCards;
+	}
+
+	public int getFrameHeight() {
+		return frameHeight;
+	}
+
+	public void setFrameHeight(int frameHeight) {
+		this.frameHeight = frameHeight;
+	}
+
+	public int getFrameWidth() {
+		return frameWidth;
+	}
+
+	public void setFrameWidth(int frameWidth) {
+		this.frameWidth = frameWidth;
 	}
 
 }

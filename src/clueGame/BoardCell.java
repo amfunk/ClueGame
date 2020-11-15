@@ -1,5 +1,8 @@
 package clueGame;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.util.*;
 
 public class BoardCell {
@@ -20,6 +23,11 @@ public class BoardCell {
 		this.col = col;
 		adjList = new HashSet<>();
 		isOccupied = false;
+	}
+	
+	public void draw(Graphics g, Dimension cellSize, int x, int y) {
+		g.setColor(Color.BLUE);
+		g.drawRect(x, y, cellSize.width, cellSize.height);
 	}
 
 	public void setOccupied(boolean isOccupied) {
