@@ -63,31 +63,33 @@ public class KnownCardsPanel extends JPanel {
 		add(weapons);
 	}
 	
-	public static void main(String[] args) {
-		Board board = Board.getInstance();
-		board.setConfigFiles("data/ClueLayout.csv", "data/ClueSetup.txt");		
-		board.initialize();
-		List<Player> players = board.getPlayers();
-		List<Card> seenCards = new ArrayList<>();
-		Player human = null;
-		Random num = new Random();
-		int index = 0;
-		for (Player player : players) {
-			if (player.isHuman()) {
-				human = player;
-			} else { //picks a card from each computer players hand to add to the humans list of seen cards for testing
-				index = num.nextInt(player.getHand().size());
-				seenCards.add(player.getHand().get(index));
-			}
-		}
-		human.setSeenCards(seenCards);
-		KnownCardsPanel panel = new KnownCardsPanel(human);  // create the panel
-        JFrame frame = new JFrame();  // create the frame
-        frame.setContentPane(panel); // put the panel in the frame
-        frame.setSize(180, 750);  // size the frame
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // allow it to close
-        frame.setVisible(true); // make it visible
-	}
+	// main class for testing KnownCardsPanel()
+	
+//	public static void main(String[] args) {
+//		Board board = Board.getInstance();
+//		board.setConfigFiles("data/ClueLayout.csv", "data/ClueSetup.txt");		
+//		board.initialize();
+//		List<Player> players = board.getPlayers();
+//		List<Card> seenCards = new ArrayList<>();
+//		Player human = null;
+//		Random num = new Random();
+//		int index = 0;
+//		for (Player player : players) {
+//			if (player.isHuman()) {
+//				human = player;
+//			} else { //picks a card from each computer players hand to add to the humans list of seen cards for testing
+//				index = num.nextInt(player.getHand().size());
+//				seenCards.add(player.getHand().get(index));
+//			}
+//		}
+//		human.setSeenCards(seenCards);
+//		KnownCardsPanel panel = new KnownCardsPanel(human);  // create the panel
+//        JFrame frame = new JFrame();  // create the frame
+//        frame.setContentPane(panel); // put the panel in the frame
+//        frame.setSize(180, 750);  // size the frame
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // allow it to close
+//        frame.setVisible(true); // make it visible
+//	}
 	
 	private void displayInHand(Player player, JPanel panel, CardType type) {
 		int counter = 0;

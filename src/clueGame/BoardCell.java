@@ -18,6 +18,7 @@ public class BoardCell {
 	private boolean isOccupied = false;
 	private boolean isDoorway = false;
 	Set<BoardCell> adjList;
+	private boolean isTarget = false;
 
 	BoardCell(int row, int col) {
 		this.row = row;
@@ -33,7 +34,7 @@ public class BoardCell {
 			g.setColor(Color.gray);
 			g.fillRect(x, y, width, height);
 		} else if (this.getRoom().isWalkway()){
-			g.setColor(Color.yellow);
+			g.setColor(Color.orange);
 			g.fillRect(x, y, width, height);
 			g.setColor(Color.black);
 			g.drawRect(x, y, width, height);
@@ -42,17 +43,18 @@ public class BoardCell {
 			g.fillRect(x, y, width, height);
 		}
 	}
-	
+
+
 	public void drawDoorLabel(Graphics g, Dimension cellSize, int x, int y) {
 		int width = cellSize.width;
 		int height = cellSize.height;
-		
+
 		if (this.isDoorway) {
 			switch (this.getDoorDirection()) {
 			case UP:
 				g.setColor(Color.blue);
 				g.fillRect(x, y-height/5, width, height/5);
-				 break;
+				break;
 			case DOWN:
 				g.setColor(Color.blue);
 				g.fillRect(x, y+height, width, height/5);
@@ -66,7 +68,7 @@ public class BoardCell {
 				g.fillRect(x+width, y, width/5, height);
 				break;
 			case NONE:
-				g.setColor(Color.red);
+				g.setColor(Color.white);
 				g.fillRect(x, y, width, height);
 				break;
 			default:
@@ -79,72 +81,88 @@ public class BoardCell {
 		}
 	}
 
-public void setOccupied(boolean isOccupied) {
-	if (isOccupied) {
-		this.isOccupied = true;
-	} else {
-		this.isOccupied = false;
+	public void highlightCell(Graphics g, Dimension cellSize, int x, int y) {
+		int width = cellSize.width;
+		int height = cellSize.height;
+		g.setColor(Color.cyan);
+		g.fillRect(x, y, width, height);
 	}
-}
 
-public boolean getIsOccupied() {
-	return this.isOccupied;
-}
 
-public boolean isDoorway() {
-	return this.isDoorway;
-}
+	public void setOccupied(boolean isOccupied) {
+		if (isOccupied) {
+			this.isOccupied = true;
+		} else {
+			this.isOccupied = false;
+		}
+	}
 
-public void setIsDoorway(boolean isDoorway) {
-	this.isDoorway = isDoorway;
-}
+	public boolean getIsOccupied() {
+		return this.isOccupied;
+	}
 
-public boolean isLabel() {
-	return this.isRoomLabel;
-}
+	public boolean isDoorway() {
+		return this.isDoorway;
+	}
 
-public void setRoomLabel(boolean isRoomLabel) {
-	this.isRoomLabel = isRoomLabel;
-}
+	public void setIsDoorway(boolean isDoorway) {
+		this.isDoorway = isDoorway;
+	}
 
-public boolean isRoomCenter() {
-	return this.isRoomCenter;
-}
+	public boolean isLabel() {
+		return this.isRoomLabel;
+	}
 
-public void setRoomCenter(boolean isRoomCenter) {
-	this.isRoomCenter = isRoomCenter;
-}
+	public void setRoomLabel(boolean isRoomLabel) {
+		this.isRoomLabel = isRoomLabel;
+	}
 
-public char getSecretPassage() {
-	return this.secretPassage;
-}
+	public boolean isRoomCenter() {
+		return this.isRoomCenter;
+	}
 
-public void setSecretPassage(char secretPassage) {
-	this.secretPassage = secretPassage;
-}
+	public void setRoomCenter(boolean isRoomCenter) {
+		this.isRoomCenter = isRoomCenter;
+	}
 
-public Room getRoom() {
-	return room;
-}
+	public char getSecretPassage() {
+		return this.secretPassage;
+	}
 
-public void setRoom(Room room) {
-	this.room = room;
-}
+	public void setSecretPassage(char secretPassage) {
+		this.secretPassage = secretPassage;
+	}
 
-public void setDoorDirection(DoorDirection doorDirection) {
-	this.doorDirection = doorDirection;
-}
+	public Room getRoom() {
+		return room;
+	}
 
-public DoorDirection getDoorDirection() {
-	return this.doorDirection;
-}
+	public void setRoom(Room room) {
+		this.room = room;
+	}
 
-public int getRow() {
-	return row;
-}
+	public void setDoorDirection(DoorDirection doorDirection) {
+		this.doorDirection = doorDirection;
+	}
 
-public int getCol() {
-	return col;
-}
+	public DoorDirection getDoorDirection() {
+		return this.doorDirection;
+	}
+
+	public int getRow() {
+		return row;
+	}
+
+	public int getCol() {
+		return col;
+	}
+
+	public boolean isTarget() {
+		return isTarget;
+	}
+
+	public void setTarget(boolean isTarget) {
+		this.isTarget = isTarget;
+	}
 
 }

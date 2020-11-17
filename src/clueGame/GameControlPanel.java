@@ -4,24 +4,42 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-public class GameControlPanel extends JPanel{
+public class GameControlPanel extends JPanel {
 	
 	private JTextField turnField = new JTextField();
 	private JTextField rollField = new JTextField();
 	private JTextField guess = new JTextField();
 	private JTextField guessResult = new JTextField();
+	private int roll = 0;
+	
+	private Player curPlayer;
+	private Board board;
 	
 	GameControlPanel() {
+		setUp();
+	}
+	
+	public void setUp() {
+		board = Board.getInstance();
+		curPlayer = board.getCurPlayer();
+		BoardCell cell = board.getCell(curPlayer.getColumn(), curPlayer.getRow());
+		rollDie();
+		setTurn(curPlayer, this.roll);
+		board.calcTargets(cell, this.roll);
 		setLayout(new GridLayout(2, 0));
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new GridLayout(1, 4));
@@ -36,8 +54,27 @@ public class GameControlPanel extends JPanel{
 		rollField.setEditable(false);
 		rollField.setPreferredSize(new Dimension(40, 20));
 		rollPanel.add(rollField);
+		
 		JButton accuseButton = new JButton("Make Accusation");
+		accuseButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "You pressed Make Accusation. Congrats");
+			}	
+		});
+		
 		JButton nextButton = new JButton("NEXT!");
+		nextButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (board.isFinished()) {
+					nextButtonPressed();
+				} else {
+					JOptionPane.showMessageDialog(board, "Please finish turn before clicking 'Next'", "Warning", JOptionPane.WARNING_MESSAGE);
+				}
+			}	
+		});
+		
 		topPanel.add(turnPanel);
 		topPanel.add(rollPanel);
 		topPanel.add(accuseButton);
@@ -58,6 +95,32 @@ public class GameControlPanel extends JPanel{
 		resultPanel.add(guessResult);
 		bottomPanel.add(guessPanel);
 		bottomPanel.add(resultPanel);
+	}
+	
+	public void nextButtonPressed() {
+		board.updateCurrentPlayer();
+		curPlayer = board.getCurPlayer();
+		BoardCell cell = board.getCell(curPlayer.getColumn(), curPlayer.getRow());
+		rollDie();
+		setTurn(curPlayer, this.roll);
+		board.calcTargets(cell, this.roll);
+		board.repaint();
+		if(curPlayer.isHuman()) {
+			board.setFinished(false);
+		} else {
+			//TODO: do accusation
+			//do move
+			//make suggestion
+		}
+	}
+
+	public void rollDie() {
+		//roll the die
+		Random rand = new Random();
+		String roll;
+		this.roll = rand.nextInt(6) + 1;
+		roll = Integer.toString(this.roll);
+		setRollField(roll);
 	}
 	
 	public static void main(String[] args) {
@@ -97,4 +160,13 @@ public class GameControlPanel extends JPanel{
 		this.rollField.setText(rollField);
 	}
 	
+	public int getRoll() {
+		return roll;
+	}
+
+	public void setRoll(int roll) {
+		this.roll = roll;
+	}
+
+
 }

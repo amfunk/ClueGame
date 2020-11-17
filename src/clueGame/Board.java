@@ -8,6 +8,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.*;
 
 public class Board extends JPanel {
@@ -29,14 +31,48 @@ public class Board extends JPanel {
 	private BoardCell[][] grid;
 	private Set<BoardCell> targets;
 	private Set<BoardCell> visited = new HashSet<>();
+	
+	private boolean isFinished = true;
+	private Player curPlayer;
 
 	private int frameHeight;
 	private int frameWidth;
 
 	private static Board theInstance = new Board();
+	
+	MouseListener mouseListener = new MouseListener() {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			if (curPlayer.isHuman()) {
+				
+			}
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			//don't need this method
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			//don't need this method
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			//don't need this method
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			//don't need this method
+		}
+		
+	};
 
 	private Board() {
-
+		
 	}
 
 	public static Board getInstance() {
@@ -44,6 +80,8 @@ public class Board extends JPanel {
 	}
 
 	public void initialize() {
+		Board board = Board.getInstance();
+		board.addMouseListener(mouseListener);
 		roomMap = new HashMap<>(); //allocates memory for a new roomMap upon each new call to initialize
 		try {
 			loadConfigFiles();
@@ -146,7 +184,7 @@ public class Board extends JPanel {
 					} else if (val.equals("Green")) {
 						color = Color.green;
 					} else if (val.equals("Blue")) {
-						color = Color.cyan;
+						color = Color.blue;
 					} else if (val.equals("Red")) {
 						color = Color.red;
 					} else if (val.equals("Purple")) {
@@ -158,6 +196,7 @@ public class Board extends JPanel {
 				case 2:
 					if (val.equals("Human")) {
 						player = new HumanPlayer();
+						curPlayer = player;
 						player.setHuman(true);
 					} else if (val.equals("Computer")) {
 						player = new ComputerPlayer();
@@ -573,7 +612,17 @@ public class Board extends JPanel {
 		findAllTargets(startCell, pathlength);
 		visited.remove(startCell);
 	}
-
+	
+	public void updateCurrentPlayer() {
+		//updates curPlayer with next player in List
+		int index = players.indexOf(curPlayer);
+		if (index < players.size() - 1) {
+			curPlayer = players.get(index+1);
+		} else {
+			curPlayer = players.get(0);
+		}
+	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -607,6 +656,21 @@ public class Board extends JPanel {
 		}
 		for (Player player : this.getPlayers()) {
 			player.draw(g, cellSize);
+		}
+		xOffset = cellWidth/2;
+		yOffset = cellHeight/2;
+		if (curPlayer.isHuman()) {
+			for (int i = 0; i < this.rows; i++) {
+				for (int j = 0; j < this.cols; j++) {
+					cell = this.getCell(i, j);
+					if (this.targets.contains(cell)) {
+						cell.highlightCell(g, cellSize, xOffset, yOffset);
+					}
+					xOffset = xOffset + cellWidth;
+				}
+				yOffset = yOffset + cellHeight;
+				xOffset = cellWidth/2;
+			}
 		}
 	}
 
@@ -672,6 +736,22 @@ public class Board extends JPanel {
 
 	public void setFrameWidth(int frameWidth) {
 		this.frameWidth = frameWidth;
+	}
+
+	public boolean isFinished() {
+		return this.isFinished;
+	}
+
+	public void setFinished(boolean isFinished) {
+		this.isFinished = isFinished;
+	}
+
+	public Player getCurPlayer() {
+		return curPlayer;
+	}
+
+	public void setCurPlayer(Player curPlayer) {
+		this.curPlayer = curPlayer;
 	}
 
 }
