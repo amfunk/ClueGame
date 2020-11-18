@@ -6,7 +6,9 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.Random;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -104,12 +106,12 @@ public class GameControlPanel extends JPanel {
 		rollDie();
 		setTurn(curPlayer, this.roll);
 		board.calcTargets(cell, this.roll);
-		board.repaint();
+		board.repaint(); //draws targets if curPlayer is human in Board class
 		if(curPlayer.isHuman()) {
 			board.setFinished(false);
 		} else {
 			//TODO: do accusation
-			//do move
+			computerMove();
 			//make suggestion
 		}
 	}
@@ -121,6 +123,19 @@ public class GameControlPanel extends JPanel {
 		this.roll = rand.nextInt(6) + 1;
 		roll = Integer.toString(this.roll);
 		setRollField(roll);
+	}
+	
+	public void computerMove() {
+		Random rand = new Random();
+		int index = rand.nextInt(board.getTargets().size()-1);
+		int counter = 0;
+		Player curPlayer = board.getCurPlayer();
+		for (BoardCell target : board.getTargets()) {
+			if (index == counter) {
+				curPlayer.setPosition(target.getCol(), target.getRow());
+			}
+			counter++;
+		}
 	}
 	
 	public static void main(String[] args) {

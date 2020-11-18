@@ -130,4 +130,9 @@ public abstract class Player {
 	public void setHuman(boolean isHuman) {
 		this.isHuman = isHuman;
 	}
+
+	public void setPosition(int row, int column) {
+		this.row = row;
+		this.column = column;
+	}
 }

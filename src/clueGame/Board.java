@@ -2,6 +2,7 @@ package clueGame;
 
 import java.util.*;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import java.awt.Color;
@@ -32,7 +33,9 @@ public class Board extends JPanel {
 	private Set<BoardCell> targets;
 	private Set<BoardCell> visited = new HashSet<>();
 	
-	private boolean isFinished = true;
+	private int cellHeight;
+	private int cellWidth;
+	private boolean isFinished = false;
 	private Player curPlayer;
 
 	private int frameHeight;
@@ -44,8 +47,24 @@ public class Board extends JPanel {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			if (curPlayer.isHuman()) {
-				
+			Board board = Board.getInstance();
+			if (curPlayer.isHuman() && !isFinished) {
+				int x = e.getX();
+				int y = e.getY();
+				int xOffset = cellWidth/2;
+				int yOffset = cellHeight/2;
+				int cellRow = (y - yOffset) / cellHeight;
+				int cellColumn = (x - xOffset) / cellWidth;
+				//JOptionPane.showMessageDialog(board, "Row: " + cellRow + ", Col: " + cellColumn);
+				BoardCell cell = board.getCell(cellRow, cellColumn);
+				if (board.getTargets().contains(cell)) {
+					//JOptionPane.showMessageDialog(board, "Target list is working");
+					curPlayer.setPosition(cellColumn, cellRow);
+					isFinished = true;
+					board.repaint();
+				} else {
+					JOptionPane.showMessageDialog(board, "Please select a valid target", "Warning", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		}
 
@@ -627,8 +646,8 @@ public class Board extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		BoardCell cell;
-		int cellHeight = getHeight() / (this.rows+1);
-		int cellWidth = getWidth() / (this.cols+1);
+		this.cellHeight = getHeight() / (this.rows+1);
+		this.cellWidth = getWidth() / (this.cols+1);
 		int xOffset = cellWidth/2;
 		int yOffset = cellHeight/2;
 		Dimension cellSize = new Dimension(cellWidth, cellHeight);
@@ -659,7 +678,7 @@ public class Board extends JPanel {
 		}
 		xOffset = cellWidth/2;
 		yOffset = cellHeight/2;
-		if (curPlayer.isHuman()) {
+		if (curPlayer.isHuman() && !isFinished) {
 			for (int i = 0; i < this.rows; i++) {
 				for (int j = 0; j < this.cols; j++) {
 					cell = this.getCell(i, j);
